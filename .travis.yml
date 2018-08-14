@@ -1,0 +1,15 @@
+language: java
+dist: trusty
+sudo: false
+
+matrix:
+  include:
+    - name: "Java 8 Tests"
+      jdk: oraclejdk8
+    - name: "Coverage"
+      jdk: oraclejdk8
+      env: TESTENV=cover
+      script: mvn clean cobertura:cobertura
+
+after_success:
+  - '[[ "$TESTENV" == "cover" ]] && bash <(curl -s https://codecov.io/bash)'
