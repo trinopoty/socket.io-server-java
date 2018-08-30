@@ -42,6 +42,16 @@ public final class SocketIoSocket extends Emitter {
         mDisconnected = false;
     }
 
+    @Override
+    public int hashCode() {
+        return mId.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return ((obj instanceof SocketIoSocket) && getId().equals(((SocketIoSocket)obj).getId()));
+    }
+
     public String getId() {
         return mId;
     }
@@ -62,6 +72,39 @@ public final class SocketIoSocket extends Emitter {
                 onClose("server namespace disconnect");
             }
         }
+    }
+
+    /**
+     * Broadcast a message to all clients in this namespace except this client.
+     *
+     * @param args Arguments to send. Supported types are: {@link org.json.JSONObject}, {@link org.json.JSONArray}, null
+     */
+    public void broadcast(Object... args) {
+        broadcast((String[]) null, args);
+    }
+
+    /**
+     * Broadcast a message to all clients in this namespace that
+     * have joined specified room except this client.
+     *
+     * @param room Room to send message to.
+     * @param args Arguments to send. Supported types are: {@link org.json.JSONObject}, {@link org.json.JSONArray}, null
+     */
+    public void broadcast(String room, Object... args) {
+        broadcast(new String[] { room }, args);
+    }
+
+    /**
+     * Broadcast a message to all clients in this namespace that
+     * have joined specified rooms except this client.
+     *
+     * @param rooms Rooms to send message to.
+     * @param args Array of arguments to send. Supported types are: {@link org.json.JSONObject}, {@link org.json.JSONArray}, null
+     * @throws IllegalArgumentException If argument is not of supported type.
+     */
+    public void broadcast(String[] rooms, Object[] args) throws IllegalArgumentException {
+        final Packet packet = PacketUtils.createDataPacket(Parser.EVENT, args);
+        mAdapter.broadcast(packet, rooms, new String[] { getId() });
     }
 
     public void send(Object... args) {
@@ -203,7 +246,7 @@ public final class SocketIoSocket extends Emitter {
         }
     }
 
-    private void sendPacket(Packet packet) {
+    void sendPacket(Packet packet) {
         packet.nsp = mNamespace.getName();
         mClient.sendPacket(packet);
     }

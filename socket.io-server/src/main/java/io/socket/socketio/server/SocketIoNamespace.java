@@ -31,6 +31,14 @@ public final class SocketIoNamespace extends Emitter {
         return mName;
     }
 
+    public SocketIoServer getServer() {
+        return mServer;
+    }
+
+    public SocketIoAdapter getAdapter() {
+        return mAdapter;
+    }
+
     /**
      * Broadcast a message to all clients in this namespace.
      *
@@ -64,12 +72,12 @@ public final class SocketIoNamespace extends Emitter {
         mAdapter.broadcast(packet, rooms);
     }
 
-    SocketIoAdapter getAdapter() {
-        return mAdapter;
-    }
-
     int nextId() {
         return mAckId.incrementAndGet();
+    }
+
+    HashMap<String, SocketIoSocket> getConnectedSockets() {
+        return mConnectedSockets;
     }
 
     synchronized SocketIoSocket add(SocketIoClient client) {
