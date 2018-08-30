@@ -15,7 +15,7 @@ public final class SocketIoServer {
     private final HashMap<String, SocketIoNamespace> mNamespaces = new HashMap<>();
     private final Parser.Encoder mEncoder = new IOParser.Encoder();
 
-    public SocketIoServer(EngineIoServer server, SocketIoServerOptions options) {
+    public SocketIoServer(EngineIoServer server) {
         mAdapterFactory = new SocketIoMemoryAdapter.Factory();
 
         namespace("/");
