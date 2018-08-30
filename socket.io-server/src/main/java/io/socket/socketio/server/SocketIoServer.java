@@ -8,6 +8,7 @@ import io.socket.parser.Parser;
 
 import java.util.HashMap;
 
+@SuppressWarnings("WeakerAccess")
 public final class SocketIoServer {
 
     private final SocketIoAdapter.AdapterFactory mAdapterFactory;
@@ -39,6 +40,10 @@ public final class SocketIoServer {
     }
 
     public boolean hasNamespace(String namespace) {
+        if (namespace.charAt(0) != '/') {
+            namespace = "/" + namespace;
+        }
+
         return mNamespaces.containsKey(namespace);
     }
 
