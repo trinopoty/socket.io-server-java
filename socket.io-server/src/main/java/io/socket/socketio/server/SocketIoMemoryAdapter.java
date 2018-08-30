@@ -4,7 +4,7 @@ import io.socket.parser.Packet;
 
 import java.util.*;
 
-public final class SocketIoMemoryAdapter extends SocketIoAdapter {
+final class SocketIoMemoryAdapter extends SocketIoAdapter {
 
     private static final String[] EMPTY_SOCKET_EXCLUSION = new String[0];
 
@@ -21,7 +21,11 @@ public final class SocketIoMemoryAdapter extends SocketIoAdapter {
     }
 
     @Override
-    public synchronized void broadcast(Packet packet, String[] rooms, String[] socketsExcluded) {
+    public synchronized void broadcast(Packet packet, String[] rooms, String[] socketsExcluded) throws IllegalArgumentException {
+        if (packet == null) {
+            throw new IllegalArgumentException("packet must not be null.");
+        }
+
         socketsExcluded = (socketsExcluded != null)? socketsExcluded : EMPTY_SOCKET_EXCLUSION;
         final HashSet<String> socketsExcludedSet = new HashSet<>();
         Collections.addAll(socketsExcludedSet, socketsExcluded);
@@ -57,7 +61,14 @@ public final class SocketIoMemoryAdapter extends SocketIoAdapter {
     }
 
     @Override
-    public synchronized void add(String room, SocketIoSocket socket) {
+    public synchronized void add(String room, SocketIoSocket socket) throws IllegalArgumentException {
+        if (room == null) {
+            throw new IllegalArgumentException("room must not be null.");
+        }
+        if (socket == null) {
+            throw new IllegalArgumentException("socket must not be null.");
+        }
+
         if (!mSocketRooms.containsKey(socket.getId())) {
             mSocketRooms.put(socket.getId(), new HashSet<String>());
         }
@@ -70,7 +81,14 @@ public final class SocketIoMemoryAdapter extends SocketIoAdapter {
     }
 
     @Override
-    public synchronized void remove(String room, SocketIoSocket socket) {
+    public synchronized void remove(String room, SocketIoSocket socket) throws IllegalArgumentException {
+        if (room == null) {
+            throw new IllegalArgumentException("room must not be null.");
+        }
+        if (socket == null) {
+            throw new IllegalArgumentException("socket must not be null.");
+        }
+
         if (mRoomSockets.containsKey(room)) {
             final HashSet<SocketIoSocket> roomSockets = mRoomSockets.get(room);
 
@@ -90,7 +108,11 @@ public final class SocketIoMemoryAdapter extends SocketIoAdapter {
     }
 
     @Override
-    public SocketIoSocket[] listClients(String room) {
+    public SocketIoSocket[] listClients(String room) throws IllegalArgumentException {
+        if (room == null) {
+            throw new IllegalArgumentException("room must not be null.");
+        }
+
         if (mRoomSockets.containsKey(room)) {
             return mRoomSockets.get(room).toArray(new SocketIoSocket[0]);
         } else {
@@ -99,7 +121,11 @@ public final class SocketIoMemoryAdapter extends SocketIoAdapter {
     }
 
     @Override
-    public String[] listClientRooms(SocketIoSocket socket) {
+    public String[] listClientRooms(SocketIoSocket socket) throws IllegalArgumentException {
+        if (socket == null) {
+            throw new IllegalArgumentException("socket must not be null.");
+        }
+
         if (mSocketRooms.containsKey(socket.getId())) {
             return mSocketRooms.get(socket.getId()).toArray(new String[0]);
         } else {
