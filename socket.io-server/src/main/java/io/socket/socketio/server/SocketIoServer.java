@@ -11,13 +11,18 @@ import java.util.HashMap;
 @SuppressWarnings("WeakerAccess")
 public final class SocketIoServer {
 
-    private final SocketIoAdapter.AdapterFactory mAdapterFactory;
+    private final SocketIoServerOptions mOptions;
 
     private final HashMap<String, SocketIoNamespace> mNamespaces = new HashMap<>();
     private final Parser.Encoder mEncoder = new IOParser.Encoder();
 
     public SocketIoServer(EngineIoServer server) {
-        mAdapterFactory = new SocketIoMemoryAdapter.Factory();
+        this(server, SocketIoServerOptions.newFromDefault());
+    }
+
+    public SocketIoServer(EngineIoServer server, SocketIoServerOptions options) {
+        mOptions = options;
+        mOptions.lock();
 
         namespace("/");
 
@@ -36,7 +41,7 @@ public final class SocketIoServer {
     }
 
     public SocketIoAdapter.AdapterFactory getAdapterFactory() {
-        return mAdapterFactory;
+        return mOptions.getAdapterFactory();
     }
 
     public boolean hasNamespace(String namespace) {
