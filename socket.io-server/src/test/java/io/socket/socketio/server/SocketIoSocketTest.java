@@ -437,38 +437,7 @@ public final class SocketIoSocketTest {
     }
 
     @Test
-    public void test_onConnect_default_namespace() {
-        final LocalAdapterFactory adapterFactory = new LocalAdapterFactory();
-
-        final EngineIoServer engineIoServer = new EngineIoServer();
-        final SocketIoServer server = Mockito.spy(new SocketIoServer(
-                engineIoServer,
-                SocketIoServerOptions.newFromDefault().setAdapterFactory(adapterFactory)));
-        final SocketIoNamespace namespace = server.namespace("/");
-
-        final Emitter.Listener connectionListener = Mockito.spy(new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                final SocketIoSocket socket = (SocketIoSocket) args[0];
-                final SocketIoAdapter adapter = adapterFactory.adapter;
-
-                socket.onConnect();
-
-                Mockito.verify(adapter, Mockito.times(1))
-                        .add(Mockito.eq(socket.getId()), Mockito.eq(socket));
-            }
-        });
-        namespace.on("connection", connectionListener);
-
-        final EngineIoWebSocketImpl webSocket = new EngineIoWebSocketImpl();
-        engineIoServer.handleWebSocket(webSocket);
-
-        Mockito.verify(connectionListener, Mockito.times(1))
-                .call(Mockito.any(SocketIoSocket.class));
-    }
-
-    @Test
-    public void test_onConnect_named_namespace() {
+    public void test_onConnect() {
         final EngineIoServer engineIoServer = new EngineIoServer();
         final SocketIoServer server = Mockito.spy(new SocketIoServer(engineIoServer));
         final SocketIoNamespace namespace = server.namespace("/foo");

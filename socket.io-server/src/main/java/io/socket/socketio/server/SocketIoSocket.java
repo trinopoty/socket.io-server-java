@@ -205,11 +205,7 @@ public final class SocketIoSocket extends Emitter {
         mNamespace.addConnected(this);
         joinRoom(getId());
 
-        if (!mNamespace.getName().equals("/")) {
-            final Packet packet = new Packet(Parser.CONNECT);
-
-            sendPacket(packet);
-        }
+        sendPacket(new Packet(Parser.CONNECT));
     }
 
     void onDisconnect() {
