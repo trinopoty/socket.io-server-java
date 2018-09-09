@@ -40,23 +40,14 @@ public final class SocketIoNamespace extends Emitter {
     }
 
     /**
-     * Broadcast a message to all clients in this namespace.
-     *
-     * @param args Arguments to send. Supported types are: {@link org.json.JSONObject}, {@link org.json.JSONArray}, null
-     */
-    public void broadcast(Object... args) {
-        broadcast((String[]) null, args);
-    }
-
-    /**
      * Broadcast a message to all clients in this namespace that
      * have joined specified room.
      *
-     * @param room Room to send message to.
+     * @param room Room to send message to or null.
      * @param args Arguments to send. Supported types are: {@link org.json.JSONObject}, {@link org.json.JSONArray}, null
      */
     public void broadcast(String room, Object... args) {
-        broadcast(new String[] { room }, args);
+        broadcast((room != null)? (new String[] { room }) : null, args);
     }
 
     /**
