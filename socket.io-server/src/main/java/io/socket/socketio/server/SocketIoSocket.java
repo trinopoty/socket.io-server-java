@@ -30,7 +30,6 @@ public final class SocketIoSocket extends Emitter {
     private final HashMap<Integer, ReceivedByRemoteAcknowledgementCallback> mAcknowledgementCallbacks = new HashMap<>();
 
     private boolean mConnected;
-    private boolean mDisconnected;
 
     SocketIoSocket(SocketIoNamespace namespace, SocketIoClient client) {
         mNamespace = namespace;
@@ -39,7 +38,6 @@ public final class SocketIoSocket extends Emitter {
         mId = (mNamespace.getName().equals("/"))? client.getId() : (mNamespace.getName() + "#" + client.getId());
 
         mConnected = true;
-        mDisconnected = false;
     }
 
     @Override
@@ -75,15 +73,6 @@ public final class SocketIoSocket extends Emitter {
     }
 
     /**
-     * Broadcast a message to all clients in this namespace except this client.
-     *
-     * @param args Arguments to send. Supported types are: {@link org.json.JSONObject}, {@link org.json.JSONArray}, null
-     */
-    public void broadcast(Object... args) {
-        broadcast((String[]) null, args);
-    }
-
-    /**
      * Broadcast a message to all clients in this namespace that
      * have joined specified room except this client.
      *
@@ -91,7 +80,7 @@ public final class SocketIoSocket extends Emitter {
      * @param args Arguments to send. Supported types are: {@link org.json.JSONObject}, {@link org.json.JSONArray}, null
      */
     public void broadcast(String room, Object... args) {
-        broadcast(new String[] { room }, args);
+        broadcast((room != null)? new String[] { room } : null, args);
     }
 
     /**
@@ -164,13 +153,15 @@ public final class SocketIoSocket extends Emitter {
     void onEvent(final Packet packet) {
         final Object[] args = (packet.data != null)? (Object[])packet.data : EMPTY_ARGS;
 
-        if (packet.id != 0) {
+        if (packet.id > 0) {
             final Object[] emitArgs = new Object[args.length + 1];
             System.arraycopy(args, 0, emitArgs, 0, args.length);
             emitArgs[args.length] = new ReceivedByLocalAcknowledgementCallback() {
                 @Override
                 public void sendAcknowledgement(Object... args) {
-                    mClient.sendPacket(PacketUtils.createDataPacket(Parser.ACK, args));
+                    final Packet ackPacket = PacketUtils.createDataPacket(Parser.ACK, args);
+                    ackPacket.id = packet.id;
+                    mClient.sendPacket(ackPacket);
                 }
             };
 
@@ -233,7 +224,6 @@ public final class SocketIoSocket extends Emitter {
             mNamespace.remove(this);
             mClient.remove(this);
             mConnected = false;
-            mDisconnected = true;
             mNamespace.removeConnected(this);
 
             emit("disconnect", reason);
