@@ -45,6 +45,6 @@ public final class SocketIoAdapterTest {
 
         adapter.broadcast(new Packet(Parser.CONNECT), null);
         Mockito.verify(adapter, Mockito.times(1))
-                .broadcast(Mockito.any(Packet.class), Mockito.isNull(String[].class), Mockito.isNull(String[].class));
+                .broadcast(Mockito.any(Packet.class), Mockito.<String[]>isNull(), Mockito.<String[]>isNull());
     }
 }

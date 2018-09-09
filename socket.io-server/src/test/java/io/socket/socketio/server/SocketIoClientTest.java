@@ -11,31 +11,10 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
 public final class SocketIoClientTest {
-
-    private static final class EngineIoWebSocketImpl extends EngineIoWebSocket {
-        @Override
-        public Map<String, String> getQuery() {
-            return new HashMap<>();
-        }
-
-        @Override
-        public void write(String message) {
-        }
-
-        @Override
-        public void write(byte[] message) {
-        }
-
-        @Override
-        public void close() {
-        }
-    }
 
     @Test
     public void test_constructor() {
@@ -83,11 +62,11 @@ public final class SocketIoClientTest {
                 packetData.put(1);
 
                 final Packet<JSONArray> packet = new Packet<>(Parser.EVENT, packetData);
-                client.sendPacket(packet);
 
                 try {
-                    // +1 for engine.io connect packet
-                    Mockito.verify(webSocket, Mockito.times(2))
+                    Mockito.reset(webSocket);
+                    client.sendPacket(packet);
+                    Mockito.verify(webSocket, Mockito.times(1))
                             .write(Mockito.anyString());
                 } catch (IOException ignore) {
                 }
@@ -119,11 +98,11 @@ public final class SocketIoClientTest {
                 packetData.put(new byte[16]);
 
                 final Packet<JSONArray> packet = new Packet<>(Parser.EVENT, packetData);
-                client.sendPacket(packet);
 
                 try {
-                    // +1 for engine.io connect packet
-                    Mockito.verify(webSocket, Mockito.times(2))
+                    Mockito.reset(webSocket);
+                    client.sendPacket(packet);
+                    Mockito.verify(webSocket, Mockito.times(1))
                             .write(Mockito.anyString());
                     Mockito.verify(webSocket, Mockito.times(1))
                             .write(Mockito.any(byte[].class));
@@ -158,11 +137,11 @@ public final class SocketIoClientTest {
                 socket.close();
 
                 final Packet<JSONArray> packet = new Packet<>(Parser.EVENT, packetData);
-                client.sendPacket(packet);
 
                 try {
-                    // +1 for engine.io connect packet
-                    Mockito.verify(webSocket, Mockito.times(1))
+                    Mockito.reset(webSocket);
+                    client.sendPacket(packet);
+                    Mockito.verify(webSocket, Mockito.times(0))
                             .write(Mockito.anyString());
                 } catch (IOException ignore) {
                 }
