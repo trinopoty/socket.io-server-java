@@ -11,6 +11,9 @@ import io.socket.parser.Parser;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 
+/**
+ * Represents connection to one client.
+ */
 final class SocketIoClient {
 
     private final SocketIoServer mServer;
@@ -32,8 +35,11 @@ final class SocketIoClient {
         setup();
     }
 
-    @SuppressWarnings("WeakerAccess")
-    public String getId() {
+    /**
+     * Get id of this client.
+     * @return Id of client.
+     */
+    String getId() {
         return mId;
     }
 
@@ -107,6 +113,10 @@ final class SocketIoClient {
         close();
     }
 
+    /**
+     * Get the underlying engine.io connection.
+     * @return Engine.IO connection object.
+     */
     EngineIoSocket getConnection() {
         return mConnection;
     }

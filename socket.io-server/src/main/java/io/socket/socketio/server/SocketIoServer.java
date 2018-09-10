@@ -8,6 +8,9 @@ import io.socket.parser.Parser;
 
 import java.util.HashMap;
 
+/**
+ * The socket.io server.
+ */
 @SuppressWarnings("WeakerAccess")
 public final class SocketIoServer {
 
@@ -16,10 +19,21 @@ public final class SocketIoServer {
     private final HashMap<String, SocketIoNamespace> mNamespaces = new HashMap<>();
     private final Parser.Encoder mEncoder = new IOParser.Encoder();
 
+    /**
+     * Create instance of server with default options.
+     *
+     * @param server The underlying engine.io server.
+     */
     public SocketIoServer(EngineIoServer server) {
-        this(server, SocketIoServerOptions.newFromDefault());
+        this(server, SocketIoServerOptions.DEFAULT);
     }
 
+    /**
+     * Create instance of server with provided options.
+     *
+     * @param server The underlying engine.io server.
+     * @param options Server options.
+     */
     public SocketIoServer(EngineIoServer server, SocketIoServerOptions options) {
         mOptions = options;
         mOptions.lock();
@@ -36,14 +50,30 @@ public final class SocketIoServer {
         });
     }
 
-    public Parser.Encoder getEncoder() {
+    /**
+     * Get the packet encoder of this server.
+     *
+     * @return Packet encoder instance.
+     */
+    Parser.Encoder getEncoder() {
         return mEncoder;
     }
 
-    public SocketIoAdapter.AdapterFactory getAdapterFactory() {
+    /**
+     * Gets the adapter factory of this server.
+     *
+     * @return Adapter factory instance.
+     */
+    SocketIoAdapter.AdapterFactory getAdapterFactory() {
         return mOptions.getAdapterFactory();
     }
 
+    /**
+     * Checks if the given namespace has been created.
+     *
+     * @param namespace Name of namespace with or without '/' prefix.
+     * @return Boolean value indicating if namespace has been created or not.
+     */
     public boolean hasNamespace(String namespace) {
         if (namespace.charAt(0) != '/') {
             namespace = "/" + namespace;
@@ -52,6 +82,13 @@ public final class SocketIoServer {
         return mNamespaces.containsKey(namespace);
     }
 
+    /**
+     * Retrieve instance of namespace with specified name.
+     * This method creates the namespace if not already present.
+     *
+     * @param namespace Name of namespace with or without '/' prefix.
+     * @return Namespace instance.
+     */
     public synchronized SocketIoNamespace namespace(String namespace) {
         if (namespace.charAt(0) != '/') {
             namespace = "/" + namespace;

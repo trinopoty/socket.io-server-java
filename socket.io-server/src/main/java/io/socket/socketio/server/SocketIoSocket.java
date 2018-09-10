@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+/**
+ * Socket.io socket class.
+ * This class represents a unique combination of a single remote connection
+ * and it's associated namespace.
+ */
 @SuppressWarnings("WeakerAccess")
 public final class SocketIoSocket extends Emitter {
 
@@ -53,14 +58,30 @@ public final class SocketIoSocket extends Emitter {
         return ((obj instanceof SocketIoSocket) && getId().equals(((SocketIoSocket)obj).getId()));
     }
 
+    /**
+     * Gets the id of this socket.
+     *
+     * @return Socket id string.
+     */
     public String getId() {
         return mId;
     }
 
+    /**
+     * Gets the namespace of this socket.
+     *
+     * @return Socket namespace instance.
+     */
     public SocketIoNamespace getNamespace() {
         return mNamespace;
     }
 
+    /**
+     * Disconnect this socket.
+     * Optionally, close the underlying connection.
+     *
+     * @param close Whether to close the remote connection or not.
+     */
     public void disconnect(boolean close) {
         if (mConnected) {
             if (close) {
@@ -114,6 +135,11 @@ public final class SocketIoSocket extends Emitter {
         mClient.sendPacket(packet);
     }
 
+    /**
+     * Adds the socket to the specified rooms.
+     *
+     * @param rooms List of rooms to join.
+     */
     public synchronized void joinRoom(String... rooms) {
         final ArrayList<String> roomList = new ArrayList<>();
         for (String room : rooms) {
@@ -130,6 +156,11 @@ public final class SocketIoSocket extends Emitter {
         }
     }
 
+    /**
+     * Removes the socket from the specified rooms.
+     *
+     * @param rooms List of rooms to leave.
+     */
     public synchronized void leaveRoom(String... rooms) {
         final ArrayList<String> roomList = new ArrayList<>();
         for (String room : rooms) {
@@ -146,6 +177,9 @@ public final class SocketIoSocket extends Emitter {
         }
     }
 
+    /**
+     * Removes the socket from all rooms.
+     */
     public synchronized void leaveAllRooms() {
         for (String room : mRooms) {
             mAdapter.remove(room, this);

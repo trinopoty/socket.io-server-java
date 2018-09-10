@@ -4,10 +4,17 @@ import io.socket.parser.Packet;
 
 import java.util.*;
 
-final class SocketIoMemoryAdapter extends SocketIoAdapter {
+/**
+ * In-memory adapter class.
+ * This is the default adapter used.
+ */
+public final class SocketIoMemoryAdapter extends SocketIoAdapter {
 
     private static final String[] EMPTY_SOCKET_EXCLUSION = new String[0];
 
+    /**
+     * Factory for {@link SocketIoMemoryAdapter} class.
+     */
     public static final class Factory implements AdapterFactory {
 
         @Override
