@@ -101,10 +101,12 @@ public final class SocketIoSocket extends Emitter {
      * have joined specified room except this client.
      *
      * @param room Room to send message to.
-     * @param args Arguments to send. Supported types are: {@link org.json.JSONObject}, {@link org.json.JSONArray}, null
+     * @param event Name of event to raise on remote client.
+     * @param args Arguments to send. Supported types are: {@link org.json.JSONObject}, {@link org.json.JSONArray}, null.
+     * @throws IllegalArgumentException If event is null or argument is not of supported type.
      */
-    public void broadcast(String room, Object... args) {
-        broadcast((room != null)? new String[] { room } : null, args);
+    public void broadcast(String room, String event, Object... args) throws IllegalArgumentException {
+        broadcast((room != null)? new String[] { room } : null, event, args);
     }
 
     /**
@@ -112,20 +114,44 @@ public final class SocketIoSocket extends Emitter {
      * have joined specified rooms except this client.
      *
      * @param rooms Rooms to send message to.
-     * @param args Array of arguments to send. Supported types are: {@link org.json.JSONObject}, {@link org.json.JSONArray}, null
+     * @param event Name of event to raise on remote client.
+     * @param args Array of arguments to send. Supported types are: {@link org.json.JSONObject}, {@link org.json.JSONArray}, null.
      * @throws IllegalArgumentException If argument is not of supported type.
      */
-    public void broadcast(String[] rooms, Object[] args) throws IllegalArgumentException {
-        final Packet packet = PacketUtils.createDataPacket(Parser.EVENT, args);
+    public void broadcast(String[] rooms, String event, Object[] args) throws IllegalArgumentException {
+        if (event == null) {
+            throw new IllegalArgumentException("event cannot be null.");
+        }
+
+        final Packet packet = PacketUtils.createDataPacket(Parser.EVENT, event, args);
         mAdapter.broadcast(packet, rooms, new String[] { getId() });
     }
 
-    public void send(Object... args) {
-        send(args, null);
+    /**
+     * Send data to remote client.
+     *
+     * @param event Name of event to raise on remote client.
+     * @param args Array of arguments to send. Supported types are: {@link org.json.JSONObject}, {@link org.json.JSONArray}, null.
+     * @throws IllegalArgumentException If event is null or argument is not of supported type.
+     */
+    public void send(String event, Object... args) throws IllegalArgumentException {
+        send(event, args, null);
     }
 
-    public void send(Object[] args, ReceivedByRemoteAcknowledgementCallback acknowledgementCallback) {
-        final Packet packet = PacketUtils.createDataPacket(Parser.EVENT, args);
+    /**
+     * Send data to remote client.
+     *
+     * @param event Name of event to raise on remote client.
+     * @param args Array of arguments to send. Supported types are: {@link org.json.JSONObject}, {@link org.json.JSONArray}, null.
+     * @param acknowledgementCallback Acknowledgement callback to call on remote ack or null.
+     * @throws IllegalArgumentException If event is null or argument is not of supported type.
+     */
+    public void send(String event, Object[] args, ReceivedByRemoteAcknowledgementCallback acknowledgementCallback) throws IllegalArgumentException {
+        if (event == null) {
+            throw new IllegalArgumentException("event cannot be null.");
+        }
+
+        final Packet packet = PacketUtils.createDataPacket(Parser.EVENT, event, args);
 
         if (acknowledgementCallback != null) {
             packet.id = mNamespace.nextId();
@@ -196,7 +222,7 @@ public final class SocketIoSocket extends Emitter {
             emitArgs[args.length] = new ReceivedByLocalAcknowledgementCallback() {
                 @Override
                 public void sendAcknowledgement(Object... args) {
-                    final Packet ackPacket = PacketUtils.createDataPacket(Parser.ACK, args);
+                    final Packet ackPacket = PacketUtils.createDataPacket(Parser.ACK, null, args);
                     ackPacket.id = packet.id;
                     mClient.sendPacket(ackPacket);
                 }
@@ -204,7 +230,11 @@ public final class SocketIoSocket extends Emitter {
             args = emitArgs;
         }
 
-        emit("message", args);
+        final String event = args[0].toString();
+        final Object[] eventArgs = new Object[args.length - 1];
+        System.arraycopy(args, 1, eventArgs, 0, eventArgs.length);
+
+        emit(event, eventArgs);
     }
 
     void onAck(Packet packet) {

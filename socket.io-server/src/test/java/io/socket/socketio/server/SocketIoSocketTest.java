@@ -112,7 +112,7 @@ public final class SocketIoSocketTest {
                         "foo_room", "bar_room"
                 };
 
-                socket.broadcast(rooms, new Object[]{ "foo" });
+                socket.broadcast(rooms, "foo", null);
                 Mockito.verify(adapterFactory.adapter, Mockito.times(1))
                         .broadcast(Mockito.any(Packet.class), Mockito.eq(rooms), Mockito.eq(new String[] {
                                 socket.getId()
@@ -316,7 +316,7 @@ public final class SocketIoSocketTest {
                     }
                 }).when(client).sendPacket(Mockito.any(Packet.class));
 
-                socket.send(new Object[] {"foo"}, new SocketIoSocket.ReceivedByRemoteAcknowledgementCallback() {
+                socket.send("foo", null, new SocketIoSocket.ReceivedByRemoteAcknowledgementCallback() {
                     @Override
                     public void onReceivedByRemote(Object... args) {
                     }
@@ -590,12 +590,12 @@ public final class SocketIoSocketTest {
                 final Packet<JSONArray> eventPacket = new Packet<>(Parser.EVENT, data);
 
                 final Emitter.Listener messageListener = Mockito.mock(Emitter.Listener.class);
-                socket.on("message", messageListener);
+                socket.on("foo", messageListener);
 
                 socket.onEvent(eventPacket);
 
                 Mockito.verify(messageListener, Mockito.times(1))
-                        .call(Mockito.eq("foo"), Mockito.eq("bar"));
+                        .call(Mockito.eq("bar"));
             }
         });
         namespace.on("connection", connectionListener);
@@ -641,15 +641,15 @@ public final class SocketIoSocketTest {
                 final Emitter.Listener messageListener = Mockito.spy(new Emitter.Listener() {
                     @Override
                     public void call(Object... args) {
-                        ((SocketIoSocket.ReceivedByLocalAcknowledgementCallback) args[2]).sendAcknowledgement();
+                        ((SocketIoSocket.ReceivedByLocalAcknowledgementCallback) args[1]).sendAcknowledgement();
                     }
                 });
-                socket.on("message", messageListener);
+                socket.on("foo", messageListener);
 
                 socket.onEvent(eventPacket);
 
                 Mockito.verify(messageListener, Mockito.times(1))
-                        .call(Mockito.eq("foo"), Mockito.eq("bar"), Mockito.any(SocketIoSocket.ReceivedByLocalAcknowledgementCallback.class));
+                        .call(Mockito.eq("bar"), Mockito.any(SocketIoSocket.ReceivedByLocalAcknowledgementCallback.class));
                 Mockito.verify(client, Mockito.times(1))
                         .sendPacket(Mockito.any(Packet.class));
             }
@@ -696,7 +696,7 @@ public final class SocketIoSocketTest {
                 final SocketIoSocket socket = new SocketIoSocket(namespace, client);
 
                 final SocketIoSocket.ReceivedByRemoteAcknowledgementCallback callback = Mockito.mock(SocketIoSocket.ReceivedByRemoteAcknowledgementCallback.class);
-                socket.send(new Object[]{"foo"}, callback);
+                socket.send("foo", null, callback);
 
                 Mockito.verify(client, Mockito.times(1))
                         .sendPacket(Mockito.any(Packet.class));

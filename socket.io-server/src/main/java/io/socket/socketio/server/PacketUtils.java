@@ -16,23 +16,24 @@ final class PacketUtils {
      * Validate args and create packet.
      *
      * @param type Type of packet to create.
+     * @param event Name of event.
      * @param args Data to set.
      * @return Created packet.
      * @throws IllegalArgumentException If args contain any invalid data type.
      */
     @SuppressWarnings("SameParameterValue")
-    static Packet createDataPacket(int type, Object[] args) throws IllegalArgumentException {
+    static Packet createDataPacket(int type, String event, Object[] args) throws IllegalArgumentException {
         if (args == null) {
             args = EMPTY_ARGS;
         }
 
         final JSONArray array = new JSONArray();
-        for (int i = 0; i < args.length; i++) {
-            final Object arg = args[i];
-            try {
-                array.put(i, arg);
-            } catch (JSONException ex) {
-                throw new IllegalArgumentException(ex);
+        if (event != null) {
+            array.put(event);
+        }
+        if (args != null) {
+            for (Object arg : args) {
+                array.put(arg);
             }
         }
         if (!PacketUtils.isPacketDataValid(array)) {

@@ -63,10 +63,11 @@ public final class SocketIoNamespace extends Emitter {
      * have joined specified room.
      *
      * @param room Room to send message to or null.
+     * @param event Name of event to raise on remote client.
      * @param args Arguments to send. Supported types are: {@link org.json.JSONObject}, {@link org.json.JSONArray}, null
      */
-    public void broadcast(String room, Object... args) {
-        broadcast((room != null)? (new String[] { room }) : null, args);
+    public void broadcast(String room, String event, Object... args) throws IllegalArgumentException {
+        broadcast((room != null)? (new String[] { room }) : null, event, args);
     }
 
     /**
@@ -74,11 +75,16 @@ public final class SocketIoNamespace extends Emitter {
      * have joined specified rooms.
      *
      * @param rooms Rooms to send message to.
+     * @param event Name of event to raise on remote client.
      * @param args Array of arguments to send. Supported types are: {@link org.json.JSONObject}, {@link org.json.JSONArray}, null
-     * @throws IllegalArgumentException If argument is not of supported type.
+     * @throws IllegalArgumentException If event is null or argument is not of supported type.
      */
-    public void broadcast(String[] rooms, Object[] args) throws IllegalArgumentException {
-        final Packet packet = PacketUtils.createDataPacket(Parser.EVENT, args);
+    public void broadcast(String[] rooms, String event, Object[] args) throws IllegalArgumentException {
+        if (event == null) {
+            throw new IllegalArgumentException("event cannot be null.");
+        }
+
+        final Packet packet = PacketUtils.createDataPacket(Parser.EVENT, event, args);
         mAdapter.broadcast(packet, rooms);
     }
 

@@ -159,7 +159,7 @@ public final class SocketIoNamespaceTest {
                         .setAdapterFactory(adapterFactory)));
         final SocketIoNamespace namespace = server.namespace("/");
 
-        namespace.broadcast(new String[] { "foo", "bar" }, new Object[] { "baz" });
+        namespace.broadcast(new String[] { "foo", "bar" }, "baz", null);
         Mockito.verify(adapter, Mockito.times(1))
                 .broadcast(Mockito.any(Packet.class), Mockito.any(String[].class), Mockito.<String[]>isNull());
     }
