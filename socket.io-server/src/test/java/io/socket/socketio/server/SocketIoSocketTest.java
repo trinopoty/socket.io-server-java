@@ -584,21 +584,18 @@ public final class SocketIoSocketTest {
                 final SocketIoSocket socket = (SocketIoSocket) args[0];
 
                 final JSONArray data = new JSONArray();
-                final Packet<Object[]> eventPacket = new Packet<>(Parser.EVENT, new Object[] {data});
+                data.put("foo");
+                data.put("bar");
 
-                final Emitter.Listener messageListener = Mockito.spy(new Emitter.Listener() {
-                    @Override
-                    public void call(Object... args) {
-                        assertEquals(1, args.length);
-                        assertEquals(data, args[0]);
-                    }
-                });
+                final Packet<JSONArray> eventPacket = new Packet<>(Parser.EVENT, data);
+
+                final Emitter.Listener messageListener = Mockito.mock(Emitter.Listener.class);
                 socket.on("message", messageListener);
 
                 socket.onEvent(eventPacket);
 
                 Mockito.verify(messageListener, Mockito.times(1))
-                        .call(Mockito.any(JSONArray.class));
+                        .call(Mockito.eq("foo"), Mockito.eq("bar"));
             }
         });
         namespace.on("connection", connectionListener);
@@ -623,7 +620,10 @@ public final class SocketIoSocketTest {
                 final SocketIoClient client = Mockito.spy(new SocketIoClient(server, engineIoSocket));
 
                 final JSONArray data = new JSONArray();
-                final Packet<Object[]> eventPacket = new Packet<>(Parser.EVENT, new Object[] {data});
+                data.put("foo");
+                data.put("bar");
+
+                final Packet<JSONArray> eventPacket = new Packet<>(Parser.EVENT, data);
                 eventPacket.id = namespace.nextId();
 
                 Mockito.doAnswer(new Answer() {
@@ -641,11 +641,7 @@ public final class SocketIoSocketTest {
                 final Emitter.Listener messageListener = Mockito.spy(new Emitter.Listener() {
                     @Override
                     public void call(Object... args) {
-                        assertEquals(2, args.length);
-                        assertEquals(data, args[0]);
-                        assertTrue(args[1] instanceof SocketIoSocket.ReceivedByLocalAcknowledgementCallback);
-
-                        ((SocketIoSocket.ReceivedByLocalAcknowledgementCallback) args[1]).sendAcknowledgement();
+                        ((SocketIoSocket.ReceivedByLocalAcknowledgementCallback) args[2]).sendAcknowledgement();
                     }
                 });
                 socket.on("message", messageListener);
@@ -653,7 +649,7 @@ public final class SocketIoSocketTest {
                 socket.onEvent(eventPacket);
 
                 Mockito.verify(messageListener, Mockito.times(1))
-                        .call(Mockito.any(JSONArray.class), Mockito.any(SocketIoSocket.ReceivedByLocalAcknowledgementCallback.class));
+                        .call(Mockito.eq("foo"), Mockito.eq("bar"), Mockito.any(SocketIoSocket.ReceivedByLocalAcknowledgementCallback.class));
                 Mockito.verify(client, Mockito.times(1))
                         .sendPacket(Mockito.any(Packet.class));
             }

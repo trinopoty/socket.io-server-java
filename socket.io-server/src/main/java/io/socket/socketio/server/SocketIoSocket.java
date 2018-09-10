@@ -3,6 +3,9 @@ package io.socket.socketio.server;
 import io.socket.emitter.Emitter;
 import io.socket.parser.Packet;
 import io.socket.parser.Parser;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -151,9 +154,9 @@ public final class SocketIoSocket extends Emitter {
     }
 
     void onEvent(final Packet packet) {
-        final Object[] args = (packet.data != null)? (Object[])packet.data : EMPTY_ARGS;
+        Object[] args = (packet.data != null)? unpackEventData((JSONArray)packet.data) : EMPTY_ARGS;
 
-        if (packet.id > 0) {
+        if (packet.id >= 0) {
             final Object[] emitArgs = new Object[args.length + 1];
             System.arraycopy(args, 0, emitArgs, 0, args.length);
             emitArgs[args.length] = new ReceivedByLocalAcknowledgementCallback() {
@@ -164,11 +167,10 @@ public final class SocketIoSocket extends Emitter {
                     mClient.sendPacket(ackPacket);
                 }
             };
-
-            emit("message", emitArgs);
-        } else {
-            emit("message", args);
+            args = emitArgs;
         }
+
+        emit("message", args);
     }
 
     void onAck(Packet packet) {
@@ -176,8 +178,7 @@ public final class SocketIoSocket extends Emitter {
             ReceivedByRemoteAcknowledgementCallback acknowledgement = mAcknowledgementCallbacks.get(packet.id);
             mAcknowledgementCallbacks.remove(packet.id);
 
-            final Object[] args = (packet.data != null)? (Object[])packet.data : EMPTY_ARGS;
-
+            final Object[] args = (packet.data != null)? unpackEventData((JSONArray)packet.data) : EMPTY_ARGS;
             acknowledgement.onReceivedByRemote(args);
         }
     }
@@ -235,5 +236,20 @@ public final class SocketIoSocket extends Emitter {
     void sendPacket(Packet packet) {
         packet.nsp = mNamespace.getName();
         mClient.sendPacket(packet);
+    }
+
+    private static Object[] unpackEventData(JSONArray data) {
+        Object[] result = new Object[data.length()];
+        for (int i = 0; i < result.length; i++) {
+            try {
+                result[i] = data.get(i);
+                if (result[i] == JSONObject.NULL) {
+                    result[i] = null;
+                }
+            } catch (JSONException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        return result;
     }
 }
