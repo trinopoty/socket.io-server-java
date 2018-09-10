@@ -4,6 +4,8 @@ import io.socket.emitter.Emitter;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -166,6 +168,97 @@ public final class SocketIoTest {
         try {
             serverWrapper.startServer();
             assertEquals(0, Utils.executeScriptForResult("src/test/resources/test_message_to_client_binary_noack.js", serverWrapper.getPort()));
+        } finally {
+            serverWrapper.stopServer();
+        }
+    }
+
+    @Test
+    public void test_broadcast_to_all_clients() throws Exception {
+        final ServerWrapper serverWrapper = new ServerWrapper();
+        final SocketIoNamespace namespace = serverWrapper.getSocketIoServer().namespace("/");
+
+        namespace.on(
+                "connection",
+                args -> namespace.broadcast(null, "foo"));
+        try {
+            serverWrapper.startServer();
+            assertEquals(0, Utils.executeScriptForResult("src/test/resources/test_broadcast_to_all_clients.js", serverWrapper.getPort()));
+        } finally {
+            serverWrapper.stopServer();
+        }
+    }
+
+    @Test
+    public void test_broadcast_to_one_room() throws Exception {
+        final ServerWrapper serverWrapper = new ServerWrapper();
+        final SocketIoNamespace namespace = serverWrapper.getSocketIoServer().namespace("/");
+
+        namespace.on("connection", args -> {
+            final SocketIoSocket socket = (SocketIoSocket) args[0];
+            socket.on("message", args1 -> {
+                if ("join".equals(args1[0])) {
+                    socket.joinRoom("foo_room");
+                    namespace.broadcast("foo_room", "foo");
+                }
+            });
+        });
+        try {
+            serverWrapper.startServer();
+            assertEquals(0, Utils.executeScriptForResult("src/test/resources/test_broadcast_to_one_room.js", serverWrapper.getPort()));
+        } finally {
+            serverWrapper.stopServer();
+        }
+    }
+
+    @Test
+    public void test_broadcast_to_multiple_rooms() throws Exception {
+        final ServerWrapper serverWrapper = new ServerWrapper();
+        final SocketIoNamespace namespace = serverWrapper.getSocketIoServer().namespace("/");
+
+        namespace.on("connection", args -> {
+            final SocketIoSocket socket = (SocketIoSocket) args[0];
+            socket.on("message", args1 -> {
+                if ("join_foo".equals(args1[0])) {
+                    socket.joinRoom("foo_room");
+                    namespace.broadcast("foo_room", "foo");
+                } else if ("join_bar".equals(args1[0])) {
+                    socket.joinRoom("bar_room");
+                    namespace.broadcast("bar_room", "bar");
+                }
+            });
+        });
+        try {
+            serverWrapper.startServer();
+            assertEquals(0, Utils.executeScriptForResult("src/test/resources/test_broadcast_to_multiple_rooms.js", serverWrapper.getPort()));
+        } finally {
+            serverWrapper.stopServer();
+        }
+    }
+
+    @Test
+    public void test_broadcast_to_all_clients_except_one() throws Exception {
+        final ServerWrapper serverWrapper = new ServerWrapper();
+        final SocketIoNamespace namespace = serverWrapper.getSocketIoServer().namespace("/");
+
+        final ArrayList<SocketIoSocket> socketList = new ArrayList<>();
+        namespace.on("connection", args -> {
+            final SocketIoSocket socket = (SocketIoSocket) args[0];
+            if (socketList.size() <= 0) {
+                socketList.add(socket);
+            }
+
+            socket.on("message", args1 -> {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ignore) {
+                }
+                socketList.get(0).broadcast(null, "foo");
+            });
+        });
+        try {
+            serverWrapper.startServer();
+            assertEquals(0, Utils.executeScriptForResult("src/test/resources/test_broadcast_to_all_clients_except_one.js", serverWrapper.getPort()));
         } finally {
             serverWrapper.stopServer();
         }
