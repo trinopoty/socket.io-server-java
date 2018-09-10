@@ -20,7 +20,7 @@ final class Utils {
             byte[] buffer = new byte[inputStream.available()];
             //noinspection ResultOfMethodCallIgnored
             inputStream.read(buffer);
-            System.out.println(new String(buffer, StandardCharsets.UTF_8));
+            System.out.println("[script:stdout]\n" + (new String(buffer, StandardCharsets.UTF_8)));
 
             return result;
         } catch (InterruptedException ex) {

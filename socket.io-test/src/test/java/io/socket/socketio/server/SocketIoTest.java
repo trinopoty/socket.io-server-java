@@ -4,6 +4,7 @@ import io.socket.emitter.Emitter;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -114,6 +115,57 @@ public final class SocketIoTest {
             serverWrapper.startServer();
             assertEquals(0, Utils.executeScriptForResult("src/test/resources/test_message_to_client_nonbinary_ack.js", serverWrapper.getPort()));
             Mockito.verify(acknowledgementCallback, Mockito.times(1)).onReceivedByRemote(Mockito.any());
+        } finally {
+            serverWrapper.stopServer();
+        }
+    }
+
+    @Test
+    public void test_message_to_server_binary_noack() throws Exception {
+        final ServerWrapper serverWrapper = new ServerWrapper();
+
+        final byte[] binaryValue = new byte[] {
+                0, 1, 2, 3, 4, 5, 6, 7
+        };
+
+        final Emitter.Listener messageListener = Mockito.mock(Emitter.Listener.class);
+        Mockito.doAnswer(invocationOnMock -> {
+            final Object[] messageArgs = invocationOnMock.getArguments();
+            assertEquals(2, messageArgs.length);
+            assertEquals("foo", messageArgs[0]);
+            assertTrue(messageArgs[1] instanceof byte[]);
+            assertArrayEquals(binaryValue, (byte[])messageArgs[1]);
+            return null;
+        }).when(messageListener).call(Mockito.any());
+
+        serverWrapper.getSocketIoServer().namespace("/").on("connection", args -> {
+            final SocketIoSocket socket = (SocketIoSocket) args[0];
+            socket.on("message", messageListener);
+        });
+        try {
+            serverWrapper.startServer();
+            assertEquals(0, Utils.executeScriptForResult("src/test/resources/test_message_to_server_binary_noack.js", serverWrapper.getPort()));
+            Mockito.verify(messageListener, Mockito.times(1)).call(Mockito.any());
+        } finally {
+            serverWrapper.stopServer();
+        }
+    }
+
+    @Test
+    public void test_message_to_client_binary_noack() throws Exception {
+        final ServerWrapper serverWrapper = new ServerWrapper();
+
+        final byte[] binaryValue = new byte[] {
+                0, 1, 2, 3, 4, 5, 6, 7
+        };
+
+        serverWrapper.getSocketIoServer().namespace("/").on("connection", args -> {
+            final SocketIoSocket socket = (SocketIoSocket) args[0];
+            socket.send("foo", binaryValue);
+        });
+        try {
+            serverWrapper.startServer();
+            assertEquals(0, Utils.executeScriptForResult("src/test/resources/test_message_to_client_binary_noack.js", serverWrapper.getPort()));
         } finally {
             serverWrapper.stopServer();
         }
