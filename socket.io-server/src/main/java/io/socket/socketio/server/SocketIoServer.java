@@ -7,6 +7,7 @@ import io.socket.parser.IOParser;
 import io.socket.parser.Parser;
 
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 /**
  * The socket.io server.
@@ -16,7 +17,9 @@ public final class SocketIoServer {
 
     private final SocketIoServerOptions mOptions;
 
-    private final HashMap<String, SocketIoNamespace> mNamespaces = new HashMap<>();
+    private final HashMap<Pattern, SocketIoNamespaceProvider> mNamespaceRegexProviderMap = new HashMap<>();
+    private final HashMap<SocketIoNamespaceProvider, SocketIoNamespaceGroupImpl> mNamespaceGroups = new HashMap<>();
+    private final HashMap<String, SocketIoNamespaceImpl> mNamespaces = new HashMap<>();
     private final Parser.Encoder mEncoder = new IOParser.Encoder();
 
     /**
@@ -68,6 +71,22 @@ public final class SocketIoServer {
         return mOptions.getAdapterFactory();
     }
 
+    boolean checkNamespace(String namespace) {
+        if (namespace.charAt(0) != '/') {
+            namespace = "/" + namespace;
+        }
+
+        for (SocketIoNamespaceProvider provider : mNamespaceGroups.keySet()) {
+            if (provider.checkNamespace(namespace)) {
+                SocketIoNamespaceGroupImpl namespaceGroup = mNamespaceGroups.get(provider);
+                SocketIoNamespaceImpl nsp = namespaceGroup.createChild(namespace);
+                mNamespaces.put(namespace, nsp);
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Checks if the given namespace has been created.
      *
@@ -94,10 +113,41 @@ public final class SocketIoServer {
             namespace = "/" + namespace;
         }
 
-        SocketIoNamespace nsp = mNamespaces.get(namespace);
+        SocketIoNamespaceImpl nsp = mNamespaces.get(namespace);
         if (nsp == null) {
-            nsp = new SocketIoNamespace(this, namespace);
+            nsp = new SocketIoNamespaceImpl(this, namespace);
             mNamespaces.put(namespace, nsp);
+        }
+
+        return nsp;
+    }
+
+    public synchronized SocketIoNamespace namespace(SocketIoNamespaceProvider namespaceProvider) {
+        SocketIoNamespaceGroupImpl nsp = mNamespaceGroups.get(namespaceProvider);
+        if (nsp == null) {
+            nsp = new SocketIoNamespaceGroupImpl(this);
+            mNamespaceGroups.put(namespaceProvider, nsp);
+        }
+
+        return nsp;
+    }
+
+    public synchronized SocketIoNamespace namespace(final Pattern namespaceRegex) {
+        SocketIoNamespaceProvider provider = mNamespaceRegexProviderMap.get(namespaceRegex);
+        if (provider == null) {
+            provider = new SocketIoNamespaceProvider() {
+                @Override
+                public boolean checkNamespace(String namespace) {
+                    return namespaceRegex.matcher(namespace).matches();
+                }
+            };
+            mNamespaceRegexProviderMap.put(namespaceRegex, provider);
+        }
+
+        SocketIoNamespaceGroupImpl nsp = mNamespaceGroups.get(provider);
+        if (nsp == null) {
+            nsp = new SocketIoNamespaceGroupImpl(this);
+            mNamespaceGroups.put(provider, nsp);
         }
 
         return nsp;

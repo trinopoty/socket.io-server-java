@@ -11,14 +11,14 @@ import org.mockito.stubbing.Answer;
 
 import static org.junit.Assert.*;
 
-public final class SocketIoNamespaceTest {
+public final class SocketIoNamespaceImplTest {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
     public void test_constructor_new_instance() {
         final SocketIoServer server = Mockito.spy(new SocketIoServer(new EngineIoServer()));
 
-        final SocketIoNamespace namespace = new SocketIoNamespace(server, "/_foo");
+        final SocketIoNamespaceImpl namespace = new SocketIoNamespaceImpl(server, "/_foo");
 
         Mockito.verify(server, Mockito.times(1)).getAdapterFactory();
         assertEquals("/_foo", namespace.getName());
@@ -58,7 +58,7 @@ public final class SocketIoNamespaceTest {
             public Object answer(InvocationOnMock invocationOnMock) {
                 return adapter;
             }
-        }).when(adapterFactory).createAdapter(Mockito.any(SocketIoNamespace.class));
+        }).when(adapterFactory).createAdapter(Mockito.any(SocketIoNamespaceImpl.class));
 
         final SocketIoServer server = Mockito.spy(new SocketIoServer(
                 new EngineIoServer(),
@@ -105,7 +105,7 @@ public final class SocketIoNamespaceTest {
             public Object answer(InvocationOnMock invocationOnMock) {
                 return adapter;
             }
-        }).when(adapterFactory).createAdapter(Mockito.any(SocketIoNamespace.class));
+        }).when(adapterFactory).createAdapter(Mockito.any(SocketIoNamespaceImpl.class));
 
         final SocketIoServer server = Mockito.spy(new SocketIoServer(
                 new EngineIoServer(),
@@ -151,7 +151,7 @@ public final class SocketIoNamespaceTest {
             public Object answer(InvocationOnMock invocationOnMock) {
                 return adapter;
             }
-        }).when(adapterFactory).createAdapter(Mockito.any(SocketIoNamespace.class));
+        }).when(adapterFactory).createAdapter(Mockito.any(SocketIoNamespaceImpl.class));
 
         final SocketIoServer server = Mockito.spy(new SocketIoServer(
                 new EngineIoServer(),

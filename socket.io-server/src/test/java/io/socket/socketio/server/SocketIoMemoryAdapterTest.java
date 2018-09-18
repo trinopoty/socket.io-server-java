@@ -264,7 +264,7 @@ public final class SocketIoMemoryAdapterTest {
     public void test_broadcast_all_rooms_no_exclusions() {
         final HashMap<String, SocketIoSocket> connectedSockets = new HashMap<>();
 
-        final SocketIoNamespace namespace = Mockito.mock(SocketIoNamespace.class);
+        final SocketIoNamespaceImpl namespace = Mockito.mock(SocketIoNamespaceImpl.class);
         Mockito.doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) {
@@ -306,7 +306,7 @@ public final class SocketIoMemoryAdapterTest {
     public void test_broadcast_all_rooms_with_exclusions() {
         final HashMap<String, SocketIoSocket> connectedSockets = new HashMap<>();
 
-        final SocketIoNamespace namespace = Mockito.mock(SocketIoNamespace.class);
+        final SocketIoNamespaceImpl namespace = Mockito.mock(SocketIoNamespaceImpl.class);
         Mockito.doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) {
@@ -348,7 +348,7 @@ public final class SocketIoMemoryAdapterTest {
     public void test_broadcast_one_room_no_exclusions() {
         final HashMap<String, SocketIoSocket> connectedSockets = new HashMap<>();
 
-        final SocketIoNamespace namespace = Mockito.mock(SocketIoNamespace.class);
+        final SocketIoNamespaceImpl namespace = Mockito.mock(SocketIoNamespaceImpl.class);
         Mockito.doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) {
@@ -398,7 +398,7 @@ public final class SocketIoMemoryAdapterTest {
     public void test_broadcast_one_room_with_exclusions() {
         final HashMap<String, SocketIoSocket> connectedSockets = new HashMap<>();
 
-        final SocketIoNamespace namespace = Mockito.mock(SocketIoNamespace.class);
+        final SocketIoNamespaceImpl namespace = Mockito.mock(SocketIoNamespaceImpl.class);
         Mockito.doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) {
@@ -439,7 +439,7 @@ public final class SocketIoMemoryAdapterTest {
     public void test_broadcast_multi_room_no_exclusions() {
         final HashMap<String, SocketIoSocket> connectedSockets = new HashMap<>();
 
-        final SocketIoNamespace namespace = Mockito.mock(SocketIoNamespace.class);
+        final SocketIoNamespaceImpl namespace = Mockito.mock(SocketIoNamespaceImpl.class);
         Mockito.doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) {

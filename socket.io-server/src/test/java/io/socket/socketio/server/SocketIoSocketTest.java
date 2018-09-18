@@ -249,7 +249,7 @@ public final class SocketIoSocketTest {
     public void test_send_without_ack() {
         final EngineIoServer engineIoServer = new EngineIoServer();
         final SocketIoServer server = new SocketIoServer(engineIoServer);
-        final SocketIoNamespace namespace = server.namespace("/");
+        final SocketIoNamespaceImpl namespace = (SocketIoNamespaceImpl)server.namespace("/");
 
         final EngineIoWebSocket webSocket = Mockito.spy(new EngineIoWebSocketImpl());
 
@@ -291,7 +291,7 @@ public final class SocketIoSocketTest {
     public void test_send_with_ack() {
         final EngineIoServer engineIoServer = new EngineIoServer();
         final SocketIoServer server = new SocketIoServer(engineIoServer);
-        final SocketIoNamespace namespace = server.namespace("/");
+        final SocketIoNamespaceImpl namespace = (SocketIoNamespaceImpl)server.namespace("/");
 
         final EngineIoWebSocket webSocket = Mockito.spy(new EngineIoWebSocketImpl());
 
@@ -337,7 +337,7 @@ public final class SocketIoSocketTest {
     public void test_disconnect_with_close() {
         final EngineIoServer engineIoServer = new EngineIoServer();
         final SocketIoServer server = new SocketIoServer(engineIoServer);
-        final SocketIoNamespace namespace = server.namespace("/");
+        final SocketIoNamespaceImpl namespace = (SocketIoNamespaceImpl)server.namespace("/");
 
         final EngineIoWebSocket webSocket = Mockito.spy(new EngineIoWebSocketImpl());
 
@@ -363,7 +363,7 @@ public final class SocketIoSocketTest {
     public void test_disconnect_without_close() {
         final EngineIoServer engineIoServer = new EngineIoServer();
         final SocketIoServer server = new SocketIoServer(engineIoServer);
-        final SocketIoNamespace namespace = server.namespace("/");
+        final SocketIoNamespaceImpl namespace = (SocketIoNamespaceImpl)server.namespace("/");
 
         final EngineIoWebSocket webSocket = Mockito.spy(new EngineIoWebSocketImpl());
 
@@ -401,7 +401,7 @@ public final class SocketIoSocketTest {
     public void test_sendPacket() {
         final EngineIoServer engineIoServer = new EngineIoServer();
         final SocketIoServer server = new SocketIoServer(engineIoServer);
-        final SocketIoNamespace namespace = server.namespace("/");
+        final SocketIoNamespaceImpl namespace = (SocketIoNamespaceImpl)server.namespace("/");
 
         final EngineIoWebSocket webSocket = Mockito.spy(new EngineIoWebSocketImpl());
 
@@ -440,7 +440,7 @@ public final class SocketIoSocketTest {
     public void test_onConnect() {
         final EngineIoServer engineIoServer = new EngineIoServer();
         final SocketIoServer server = Mockito.spy(new SocketIoServer(engineIoServer));
-        final SocketIoNamespace namespace = server.namespace("/foo");
+        final SocketIoNamespaceImpl namespace = (SocketIoNamespaceImpl)server.namespace("/foo");
 
         final Emitter.Listener connectionListener = Mockito.spy(new Emitter.Listener() {
             @Override
@@ -611,7 +611,7 @@ public final class SocketIoSocketTest {
     public void test_onEvent_with_ack() {
         final EngineIoServer engineIoServer = new EngineIoServer();
         final SocketIoServer server = Mockito.spy(new SocketIoServer(engineIoServer));
-        final SocketIoNamespace namespace = server.namespace("/foo");
+        final SocketIoNamespaceImpl namespace = (SocketIoNamespaceImpl)server.namespace("/foo");
 
         final Emitter.Listener connectionListener = Mockito.spy(new Emitter.Listener() {
             @Override
@@ -671,7 +671,7 @@ public final class SocketIoSocketTest {
 
         final EngineIoServer engineIoServer = new EngineIoServer();
         final SocketIoServer server = Mockito.spy(new SocketIoServer(engineIoServer));
-        final SocketIoNamespace namespace = server.namespace("/foo");
+        final SocketIoNamespaceImpl namespace = (SocketIoNamespaceImpl)server.namespace("/foo");
 
         final Emitter.Listener connectionListener = Mockito.spy(new Emitter.Listener() {
             @Override

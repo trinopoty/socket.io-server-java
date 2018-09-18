@@ -75,17 +75,15 @@ final class SocketIoClient {
             doConnect(namespace);
         }
 
-        // TODO: Implement dynamic namespaces
-        /*
-         this.server.checkNamespace(name, query, (dynamicNsp) => {
-           if (dynamicNsp) {
-             debug('dynamic namespace %s was created', dynamicNsp.name);
-             this.doConnect(name, query);
-           } else {
-             debug('creation of namespace %s was denied', name);
-             this.packet({ type: parser.ERROR, nsp: name, data: 'Invalid namespace' });
-           }
-         });*/
+        if (mServer.checkNamespace(namespace)) {
+            doConnect(namespace);
+        } else {
+            final Packet<String> packet = new Packet<>(Parser.ERROR);
+            packet.nsp = namespace;
+            packet.data = "Invalid namespace";
+
+            sendPacket(packet);
+        }
     }
 
     /**
@@ -186,7 +184,7 @@ final class SocketIoClient {
     }
 
     private void doConnect(String namespace) {
-        final SocketIoNamespace nsp = mServer.namespace(namespace);
+        final SocketIoNamespaceImpl nsp = (SocketIoNamespaceImpl)mServer.namespace(namespace);
         final SocketIoSocket socket = nsp.add(this);
         mSockets.put(socket.getId(), socket);
         mNamespaceSockets.put(namespace, socket);

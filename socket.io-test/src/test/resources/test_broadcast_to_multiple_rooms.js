@@ -58,4 +58,4 @@ setTimeout(function () {
     } else {
         process.exit(1);
     }
-}, 2000);
+}, 3000);

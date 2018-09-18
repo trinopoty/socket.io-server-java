@@ -29,7 +29,7 @@ public final class SocketIoSocket extends Emitter {
         void sendAcknowledgement(Object... args);
     }
 
-    private final SocketIoNamespace mNamespace;
+    private final SocketIoNamespaceImpl mNamespace;
     private final SocketIoClient mClient;
     private final SocketIoAdapter mAdapter;
     private final String mId;
@@ -39,7 +39,7 @@ public final class SocketIoSocket extends Emitter {
 
     private boolean mConnected;
 
-    SocketIoSocket(SocketIoNamespace namespace, SocketIoClient client) {
+    SocketIoSocket(SocketIoNamespaceImpl namespace, SocketIoClient client) {
         mNamespace = namespace;
         mClient = client;
         mAdapter = namespace.getAdapter();

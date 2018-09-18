@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 
@@ -50,6 +51,34 @@ public final class SocketIoServerTest {
         server.namespace("bar");
         assertTrue(server.hasNamespace("/bar"));
         assertTrue(server.hasNamespace("bar"));
+    }
+
+    @Test
+    public void test_namespaceGroup_new() {
+        final SocketIoServer server = new SocketIoServer(new EngineIoServer());
+
+        server.namespace(Pattern.compile("^/foo[0-9]$"));
+        assertFalse(server.checkNamespace("foo"));
+        assertTrue(server.checkNamespace("foo1"));
+        assertFalse(server.checkNamespace("foo10"));
+        assertFalse(server.checkNamespace("foo1a"));
+        assertFalse(server.checkNamespace("bar"));
+
+        server.namespace(new SocketIoNamespaceProvider() {
+            @Override
+            public boolean checkNamespace(String namespace) {
+                switch (namespace) {
+                    case "/bar":
+                        return true;
+                    case "/baz":
+                        return true;
+                }
+                return false;
+            }
+        });
+        assertTrue(server.checkNamespace("bar"));
+        assertTrue(server.checkNamespace("baz"));
+        assertFalse(server.checkNamespace("foobaz"));
     }
 
     @Test

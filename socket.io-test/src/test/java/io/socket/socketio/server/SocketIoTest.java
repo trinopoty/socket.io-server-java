@@ -4,6 +4,10 @@ import io.socket.emitter.Emitter;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.regex.Pattern;
+
 import static org.junit.Assert.*;
 
 public final class SocketIoTest {
@@ -14,6 +18,18 @@ public final class SocketIoTest {
         try {
             serverWrapper.startServer();
             assertEquals(0, Utils.executeScriptForResult("src/test/resources/test_connect.js", serverWrapper.getPort()));
+        } finally {
+            serverWrapper.stopServer();
+        }
+    }
+
+    @Test
+    public void test_connect_dynamic() throws Exception {
+        final ServerWrapper serverWrapper = new ServerWrapper();
+        serverWrapper.getSocketIoServer().namespace(Pattern.compile("^/foo[0-9]$"));
+        try {
+            serverWrapper.startServer();
+            assertEquals(0, Utils.executeScriptForResult("src/test/resources/test_connect_dynamic.js", serverWrapper.getPort()));
         } finally {
             serverWrapper.stopServer();
         }
@@ -205,15 +221,28 @@ public final class SocketIoTest {
         final ServerWrapper serverWrapper = new ServerWrapper();
         final SocketIoNamespace namespace = serverWrapper.getSocketIoServer().namespace("/");
 
+        final Timer timer = new Timer();
         namespace.on("connection", args -> {
             final SocketIoSocket socket = (SocketIoSocket) args[0];
             socket.on("join_foo", args1 -> {
                 socket.joinRoom("foo_room");
-                namespace.broadcast("foo_room", "foo");
+
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        namespace.broadcast("foo_room", "foo");
+                    }
+                }, 100);
             });
             socket.on("join_bar", args1 -> {
                 socket.joinRoom("bar_room");
-                namespace.broadcast("bar_room", "bar");
+
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        namespace.broadcast("bar_room", "bar");
+                    }
+                }, 100);
             });
         });
         try {
@@ -228,7 +257,7 @@ public final class SocketIoTest {
     /*@Test
     public void test_broadcast_to_all_clients_except_one() throws Exception {
         final ServerWrapper serverWrapper = new ServerWrapper();
-        final SocketIoNamespace namespace = serverWrapper.getSocketIoServer().namespace("/");
+        final SocketIoNamespaceImpl namespace = serverWrapper.getSocketIoServer().namespace("/");
 
         final ArrayList<SocketIoSocket> socketList = new ArrayList<>();
         namespace.on("connection", args -> {
