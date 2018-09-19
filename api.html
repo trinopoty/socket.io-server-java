@@ -1,0 +1,405 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>API &mdash; Socket.IO Java Server  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Javadocs" href="javadocs/index.html" />
+    <link rel="prev" title="Getting Started" href="using.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Socket.IO Java Server
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#socketioserver">SocketIoServer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#methods">Methods</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#hasnamespace">hasNamespace</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#namespace">namespace</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dynamic-namespaces">Dynamic Namespaces</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#socketionamespace">SocketIoNamespace</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Methods</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#broadcast">broadcast</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#events">Events</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#connect">connect</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#connection">connection</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#socketiosocket">SocketIoSocket</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Methods</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#send">send</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">broadcast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#disconnect">disconnect</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#joinroom">joinRoom</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#leaveroom">leaveRoom</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#leaveallrooms">leaveAllRooms</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Events</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#disconnecting">disconnecting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">disconnect</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#error">error</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="javadocs/index.html">Javadocs</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Socket.IO Java Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="api">
+<h1>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="table-of-contents">
+<p class="topic-title first">Table of Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#socketioserver" id="id6">SocketIoServer</a><ul>
+<li><a class="reference internal" href="#methods" id="id7">Methods</a><ul>
+<li><a class="reference internal" href="#hasnamespace" id="id8">hasNamespace</a></li>
+<li><a class="reference internal" href="#namespace" id="id9">namespace</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#dynamic-namespaces" id="id10">Dynamic Namespaces</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#socketionamespace" id="id11">SocketIoNamespace</a><ul>
+<li><a class="reference internal" href="#id1" id="id12">Methods</a><ul>
+<li><a class="reference internal" href="#broadcast" id="id13">broadcast</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#events" id="id14">Events</a><ul>
+<li><a class="reference internal" href="#connect" id="id15">connect</a></li>
+<li><a class="reference internal" href="#connection" id="id16">connection</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#socketiosocket" id="id17">SocketIoSocket</a><ul>
+<li><a class="reference internal" href="#id2" id="id18">Methods</a><ul>
+<li><a class="reference internal" href="#send" id="id19">send</a></li>
+<li><a class="reference internal" href="#id3" id="id20">broadcast</a></li>
+<li><a class="reference internal" href="#disconnect" id="id21">disconnect</a></li>
+<li><a class="reference internal" href="#joinroom" id="id22">joinRoom</a></li>
+<li><a class="reference internal" href="#leaveroom" id="id23">leaveRoom</a></li>
+<li><a class="reference internal" href="#leaveallrooms" id="id24">leaveAllRooms</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id4" id="id25">Events</a><ul>
+<li><a class="reference internal" href="#disconnecting" id="id26">disconnecting</a></li>
+<li><a class="reference internal" href="#id5" id="id27">disconnect</a></li>
+<li><a class="reference internal" href="#error" id="id28">error</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="socketioserver">
+<h2><a class="toc-backref" href="#id6">SocketIoServer</a><a class="headerlink" href="#socketioserver" title="Permalink to this headline">¶</a></h2>
+<p>This class contains logic for creating namespaces
+and handle raw Engine.IO connections.</p>
+<div class="section" id="methods">
+<h3><a class="toc-backref" href="#id7">Methods</a><a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="hasnamespace">
+<h4><a class="toc-backref" href="#id8">hasNamespace</a><a class="headerlink" href="#hasnamespace" title="Permalink to this headline">¶</a></h4>
+<p>Call this method to check if namespace is registered with server.</p>
+</div>
+<div class="section" id="namespace">
+<h4><a class="toc-backref" href="#id9">namespace</a><a class="headerlink" href="#namespace" title="Permalink to this headline">¶</a></h4>
+<p>Call this method to create or retrieve a namespace instance.</p>
+</div>
+</div>
+<div class="section" id="dynamic-namespaces">
+<h3><a class="toc-backref" href="#id10">Dynamic Namespaces</a><a class="headerlink" href="#dynamic-namespaces" title="Permalink to this headline">¶</a></h3>
+<p>Call the <code class="docutils literal notranslate"><span class="pre">namespace</span></code> method with either a <code class="docutils literal notranslate"><span class="pre">Pattern</span></code> instance or
+<code class="docutils literal notranslate"><span class="pre">SocketIoNamespaceProvider</span></code> instance to create a dynamic namespace.</p>
+<p><strong>Note</strong> Make sure to account for the starting <code class="docutils literal notranslate"><span class="pre">/</span></code>.</p>
+</div>
+</div>
+<div class="section" id="socketionamespace">
+<h2><a class="toc-backref" href="#id11">SocketIoNamespace</a><a class="headerlink" href="#socketionamespace" title="Permalink to this headline">¶</a></h2>
+<p>This class represents a Socket.IO namespace instance.</p>
+<div class="section" id="id1">
+<h3><a class="toc-backref" href="#id12">Methods</a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="broadcast">
+<h4><a class="toc-backref" href="#id13">broadcast</a><a class="headerlink" href="#broadcast" title="Permalink to this headline">¶</a></h4>
+<p>Call this method to broadcast an event to one or many rooms.</p>
+</div>
+</div>
+<div class="section" id="events">
+<h3><a class="toc-backref" href="#id14">Events</a><a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="connect">
+<h4><a class="toc-backref" href="#id15">connect</a><a class="headerlink" href="#connect" title="Permalink to this headline">¶</a></h4>
+<p>This event is emitted when a new client connection is established.</p>
+<p><strong>Arguments</strong></p>
+<ol class="arabic simple" start="0">
+<li><code class="docutils literal notranslate"><span class="pre">SocketIoSocket</span></code> instance of socket</li>
+</ol>
+</div>
+<div class="section" id="connection">
+<h4><a class="toc-backref" href="#id16">connection</a><a class="headerlink" href="#connection" title="Permalink to this headline">¶</a></h4>
+<p>Same as <code class="docutils literal notranslate"><span class="pre">connect</span></code> event.</p>
+</div>
+</div>
+</div>
+<div class="section" id="socketiosocket">
+<h2><a class="toc-backref" href="#id17">SocketIoSocket</a><a class="headerlink" href="#socketiosocket" title="Permalink to this headline">¶</a></h2>
+<p>This class represents a socket to connected client.</p>
+<p><strong>Note</strong> A socket joins a room with it’s own id by default.</p>
+<div class="section" id="id2">
+<h3><a class="toc-backref" href="#id18">Methods</a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="send">
+<h4><a class="toc-backref" href="#id19">send</a><a class="headerlink" href="#send" title="Permalink to this headline">¶</a></h4>
+<p>Call this method to send an event to the client with optional acknowledge callback.</p>
+</div>
+<div class="section" id="id3">
+<h4><a class="toc-backref" href="#id20">broadcast</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<p>Call this method to broadcast an event to all sockets in one or many rooms excluding this socket.</p>
+</div>
+<div class="section" id="disconnect">
+<h4><a class="toc-backref" href="#id21">disconnect</a><a class="headerlink" href="#disconnect" title="Permalink to this headline">¶</a></h4>
+<p>Call this method to disconnect the socket.</p>
+</div>
+<div class="section" id="joinroom">
+<h4><a class="toc-backref" href="#id22">joinRoom</a><a class="headerlink" href="#joinroom" title="Permalink to this headline">¶</a></h4>
+<p>Call this method to add this socket to one or more rooms.</p>
+</div>
+<div class="section" id="leaveroom">
+<h4><a class="toc-backref" href="#id23">leaveRoom</a><a class="headerlink" href="#leaveroom" title="Permalink to this headline">¶</a></h4>
+<p>Call this method to remove this socket from one or more rooms.</p>
+</div>
+<div class="section" id="leaveallrooms">
+<h4><a class="toc-backref" href="#id24">leaveAllRooms</a><a class="headerlink" href="#leaveallrooms" title="Permalink to this headline">¶</a></h4>
+<p>Call this method to remove this socket from all rooms.</p>
+</div>
+</div>
+<div class="section" id="id4">
+<h3><a class="toc-backref" href="#id25">Events</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>Any event sent from the client is emitted in addition to the events listed below.</p>
+<div class="section" id="disconnecting">
+<h4><a class="toc-backref" href="#id26">disconnecting</a><a class="headerlink" href="#disconnecting" title="Permalink to this headline">¶</a></h4>
+<p>This event is emitted before disconnecting from client.</p>
+</div>
+<div class="section" id="id5">
+<h4><a class="toc-backref" href="#id27">disconnect</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h4>
+<p>This event is emitted after disconnecting from client.</p>
+</div>
+<div class="section" id="error">
+<h4><a class="toc-backref" href="#id28">error</a><a class="headerlink" href="#error" title="Permalink to this headline">¶</a></h4>
+<p>This event is raised on error.</p>
+<p><strong>Arguments</strong></p>
+<ol class="arabic simple" start="0">
+<li><code class="docutils literal notranslate"><span class="pre">String</span></code> error reason/description</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="javadocs/index.html" class="btn btn-neutral float-right" title="Javadocs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="using.html" class="btn btn-neutral" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Trinopoty Biswas.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
