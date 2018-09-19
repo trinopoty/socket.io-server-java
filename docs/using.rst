@@ -11,8 +11,8 @@ Example servlet
 ===============
 Example servlet class::
 
-    @WebServlet("/engine.io/*")
-    public class EngineIoServlet extends HttpServlet {
+    @WebServlet("/socket.io/*")
+    public class SocketIoServlet extends HttpServlet {
 
         private final EngineIoServer mEngineIoServer = new EngineIoServer();
         private final SocketIoServer mSocketIoServer = new SocketIoServer(mEngineIoServer);
@@ -25,6 +25,11 @@ Example servlet class::
 
 In the example servlet above, a static instance of ``EngineIoServer`` is defined and
 the method ``service`` is overridden to call ``handleRequest``.
+
+Accept WebSocket Connection
+===========================
+
+Please refer to `Engine.IO documentation <https://socketio.github.io/engine.io-server-java/using.html>`_ for accepting WebSocket connection.
 
 Create namesapce
 ================
