@@ -2,14 +2,26 @@ language: java
 dist: trusty
 sudo: false
 
+branches:
+  except:
+  - gh-pages
+
 matrix:
   include:
-    - name: "Java 8 Tests"
-      jdk: oraclejdk8
-    - name: "Coverage"
-      jdk: oraclejdk8
-      env: TESTENV=cover
-      script: mvn clean cobertura:cobertura
+  - name: "Java 8 Tests"
+    jdk: oraclejdk8
+  - name: "Coverage"
+    jdk: oraclejdk8
+    env: TESTENV=cover FYI="this also builds documentation for tags"
+    script: mvn clean cobertura:cobertura
+    addons:
+      apt:
+        packages:
+        - python3
+        - python3-pip
+        - python-virtualenv
+        - make
 
 after_success:
-  - '[[ "$TESTENV" == "cover" ]] && bash <(curl -s https://codecov.io/bash)'
+- '[[ "$TESTENV" == "cover" ]] && bash <(curl -s https://codecov.io/bash)'
+- '[[ "$TESTENV" == "cover" ]] && [[ -n "$TRAVIS_TAG" ]] && ./deploy-docs.sh'
