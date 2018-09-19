@@ -83,6 +83,7 @@
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#example-servlet">Example servlet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#accept-websocket-connection">Accept WebSocket Connection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#create-namesapce">Create namesapce</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#listening-for-connections">Listening for connections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#listening-for-message-from-client">Listening for message from client</a></li>
@@ -165,8 +166,8 @@ instance.</p>
 <div class="section" id="example-servlet">
 <h2>Example servlet<a class="headerlink" href="#example-servlet" title="Permalink to this headline">¶</a></h2>
 <p>Example servlet class:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@WebServlet</span><span class="p">(</span><span class="s2">&quot;/engine.io/*&quot;</span><span class="p">)</span>
-<span class="n">public</span> <span class="k">class</span> <span class="nc">EngineIoServlet</span> <span class="n">extends</span> <span class="n">HttpServlet</span> <span class="p">{</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@WebServlet</span><span class="p">(</span><span class="s2">&quot;/socket.io/*&quot;</span><span class="p">)</span>
+<span class="n">public</span> <span class="k">class</span> <span class="nc">SocketIoServlet</span> <span class="n">extends</span> <span class="n">HttpServlet</span> <span class="p">{</span>
 
     <span class="n">private</span> <span class="n">final</span> <span class="n">EngineIoServer</span> <span class="n">mEngineIoServer</span> <span class="o">=</span> <span class="n">new</span> <span class="n">EngineIoServer</span><span class="p">();</span>
     <span class="n">private</span> <span class="n">final</span> <span class="n">SocketIoServer</span> <span class="n">mSocketIoServer</span> <span class="o">=</span> <span class="n">new</span> <span class="n">SocketIoServer</span><span class="p">(</span><span class="n">mEngineIoServer</span><span class="p">);</span>
@@ -180,6 +181,10 @@ instance.</p>
 </div>
 <p>In the example servlet above, a static instance of <code class="docutils literal notranslate"><span class="pre">EngineIoServer</span></code> is defined and
 the method <code class="docutils literal notranslate"><span class="pre">service</span></code> is overridden to call <code class="docutils literal notranslate"><span class="pre">handleRequest</span></code>.</p>
+</div>
+<div class="section" id="accept-websocket-connection">
+<h2>Accept WebSocket Connection<a class="headerlink" href="#accept-websocket-connection" title="Permalink to this headline">¶</a></h2>
+<p>Please refer to <a class="reference external" href="https://socketio.github.io/engine.io-server-java/using.html">Engine.IO documentation</a> for accepting WebSocket connection.</p>
 </div>
 <div class="section" id="create-namesapce">
 <h2>Create namesapce<a class="headerlink" href="#create-namesapce" title="Permalink to this headline">¶</a></h2>
