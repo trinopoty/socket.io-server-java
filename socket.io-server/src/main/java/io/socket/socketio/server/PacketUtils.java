@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 import java.util.Iterator;
 
-@SuppressWarnings({"BooleanMethodIsAlwaysInverted", "WeakerAccess"})
+@SuppressWarnings({"BooleanMethodIsAlwaysInverted"})
 final class PacketUtils {
 
     private static final Object[] EMPTY_ARGS = new Object[0];
@@ -46,6 +46,7 @@ final class PacketUtils {
         return packet;
     }
 
+    @SuppressWarnings("Duplicates")
     private static boolean isPacketDataValid(JSONArray array) {
         try {
             for (int idx = 0; idx < array.length(); idx++) {
@@ -71,6 +72,7 @@ final class PacketUtils {
         return false;
     }
 
+    @SuppressWarnings("Duplicates")
     private static boolean isPacketDataValid(JSONObject object) {
         try {
             final Iterator keys = object.keys();
@@ -96,6 +98,8 @@ final class PacketUtils {
                     return false;
                 }
             }
+
+            return true;
         } catch (JSONException ignore) {
         }
         return false;
