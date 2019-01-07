@@ -21,11 +21,29 @@ public final class SocketIoSocket extends Emitter {
 
     private static final Object[] EMPTY_ARGS = new Object[0];
 
+    /**
+     * Callback for remote received acknowledgement.
+     */
     public interface ReceivedByRemoteAcknowledgementCallback {
+
+        /**
+         * Called when remote client calls ack callback.
+         *
+         * @param args Data sent by remote client.
+         */
         void onReceivedByRemote(Object... args);
     }
 
+    /**
+     * Callback for local received acknowledgement.
+     */
     public interface ReceivedByLocalAcknowledgementCallback {
+
+        /**
+         * Call this method to send ack to remote client.
+         *
+         * @param args Data sent to remote client.
+         */
         void sendAcknowledgement(Object... args);
     }
 

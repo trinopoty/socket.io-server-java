@@ -4,6 +4,10 @@ import io.socket.emitter.Emitter;
 
 import java.util.HashMap;
 
+/**
+ * Socket.io namespace class.
+ * This class represents a namespace created on the server.
+ */
 @SuppressWarnings("WeakerAccess")
 public abstract class SocketIoNamespace extends Emitter {
 
