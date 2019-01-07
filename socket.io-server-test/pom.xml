@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>socket.io-test</artifactId>
+    <artifactId>socket.io-server-test</artifactId>
     <packaging>jar</packaging>
     <description>This module contains integration tests.</description>
 

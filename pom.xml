@@ -14,7 +14,7 @@
 
     <modules>
         <module>socket.io-server</module>
-        <module>socket.io-test</module>
+        <module>socket.io-server-test</module>
     </modules>
 
     <properties>
