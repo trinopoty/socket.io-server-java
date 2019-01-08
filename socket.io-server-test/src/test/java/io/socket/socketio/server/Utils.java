@@ -1,8 +1,6 @@
 package io.socket.socketio.server;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 
 final class Utils {
 
@@ -14,15 +12,13 @@ final class Utils {
                 "PORT=" + port
         });
         try {
-            int result = process.waitFor();
-
-            InputStream inputStream = process.getInputStream();
+            /*InputStream inputStream = process.getInputStream();
             byte[] buffer = new byte[inputStream.available()];
             //noinspection ResultOfMethodCallIgnored
             inputStream.read(buffer);
-            System.out.println("[script:stdout]\n" + (new String(buffer, StandardCharsets.UTF_8)));
+            System.out.println("[script:stdout]\n" + (new String(buffer, StandardCharsets.UTF_8)));*/
 
-            return result;
+            return process.waitFor();
         } catch (InterruptedException ex) {
             throw new RuntimeException(ex);
         }
