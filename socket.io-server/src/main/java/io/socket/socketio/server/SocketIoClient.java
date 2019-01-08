@@ -71,11 +71,7 @@ final class SocketIoClient {
      * @param namespace Namespace to connect to.
      */
     void connect(String namespace) {
-        if (mServer.hasNamespace(namespace)) {
-            doConnect(namespace);
-        }
-
-        if (mServer.checkNamespace(namespace)) {
+        if (mServer.hasNamespace(namespace) || mServer.checkNamespace(namespace)) {
             doConnect(namespace);
         } else {
             final Packet<String> packet = new Packet<>(Parser.ERROR);
