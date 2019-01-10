@@ -123,7 +123,7 @@ public final class SocketIoServerTest {
 
         final Emitter.Listener disconnectListener = Mockito.mock(Emitter.Listener.class);
 
-        final Emitter.Listener connectionListener = Mockito.spy(Emitter.Listener.class);
+        final Emitter.Listener connectionListener = Mockito.mock(Emitter.Listener.class);
         Mockito.doAnswer(invocation -> {
             final Object[] args = invocation.getArguments();
             final SocketIoSocket socket = (SocketIoSocket) args[0];

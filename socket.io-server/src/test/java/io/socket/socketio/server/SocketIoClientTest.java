@@ -21,7 +21,7 @@ public final class SocketIoClientTest {
         final EngineIoServer engineIoServer = new EngineIoServer();
         final SocketIoServer socketIoServer = new SocketIoServer(engineIoServer);
 
-        final Emitter.Listener connectionListener = Mockito.spy(Emitter.Listener.class);
+        final Emitter.Listener connectionListener = Mockito.mock(Emitter.Listener.class);
         Mockito.doAnswer(invocation -> {
             final Object[] args = invocation.getArguments();
             final EngineIoSocket socket = Mockito.spy((EngineIoSocket) args[0]);
@@ -51,7 +51,7 @@ public final class SocketIoClientTest {
 
         final EngineIoWebSocket webSocket = Mockito.spy(new EngineIoWebSocketImpl());
 
-        final Emitter.Listener connectionListener = Mockito.spy(Emitter.Listener.class);
+        final Emitter.Listener connectionListener = Mockito.mock(Emitter.Listener.class);
         Mockito.doAnswer(invocation -> {
             final Object[] args = invocation.getArguments();
             final EngineIoSocket socket = (EngineIoSocket) args[0];
@@ -86,7 +86,7 @@ public final class SocketIoClientTest {
 
         final EngineIoWebSocket webSocket = Mockito.spy(new EngineIoWebSocketImpl());
 
-        final Emitter.Listener connectionListener = Mockito.spy(Emitter.Listener.class);
+        final Emitter.Listener connectionListener = Mockito.mock(Emitter.Listener.class);
         Mockito.doAnswer(invocation -> {
             final Object[] args = invocation.getArguments();
             final EngineIoSocket socket = (EngineIoSocket) args[0];
@@ -124,7 +124,7 @@ public final class SocketIoClientTest {
 
         final EngineIoWebSocket webSocket = Mockito.spy(new EngineIoWebSocketImpl());
 
-        final Emitter.Listener connectionListener = Mockito.spy(Emitter.Listener.class);
+        final Emitter.Listener connectionListener = Mockito.mock(Emitter.Listener.class);
         Mockito.doAnswer(invocation -> {
             final Object[] args = invocation.getArguments();
             final EngineIoSocket socket = (EngineIoSocket) args[0];
@@ -161,7 +161,7 @@ public final class SocketIoClientTest {
 
         final EngineIoWebSocket webSocket = Mockito.spy(new EngineIoWebSocketImpl());
 
-        final Emitter.Listener connectionListener = Mockito.spy(Emitter.Listener.class);
+        final Emitter.Listener connectionListener = Mockito.mock(Emitter.Listener.class);
         Mockito.doAnswer(invocation -> {
             final Object[] args = invocation.getArguments();
             final EngineIoSocket socket = Mockito.spy((EngineIoSocket) args[0]);
@@ -188,7 +188,7 @@ public final class SocketIoClientTest {
 
         final EngineIoWebSocket webSocket = Mockito.spy(new EngineIoWebSocketImpl());
 
-        final Emitter.Listener connectionListener = Mockito.spy(Emitter.Listener.class);
+        final Emitter.Listener connectionListener = Mockito.mock(Emitter.Listener.class);
         Mockito.doAnswer(invocation -> {
             final Object[] args = invocation.getArguments();
             final EngineIoSocket socket = Mockito.spy((EngineIoSocket) args[0]);
