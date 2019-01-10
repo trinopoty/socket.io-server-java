@@ -641,6 +641,62 @@ public final class SocketIoSocketTest {
     }
 
     @Test
+    public void test_onEvent_all_listener() {
+        final EngineIoServer engineIoServer = new EngineIoServer();
+        final SocketIoServer server = Mockito.spy(new SocketIoServer(engineIoServer));
+        final SocketIoNamespace namespace = server.namespace("/");
+
+        final SocketIoSocket.AllEventListener allEventListener = Mockito.mock(SocketIoSocket.AllEventListener.class);
+
+        final Emitter.Listener connectionListener = Mockito.spy(Emitter.Listener.class);
+        Mockito.doAnswer(invocation -> {
+            final Object[] args = invocation.getArguments();
+            final SocketIoSocket socket = (SocketIoSocket) args[0];
+
+            socket.registerAllEventListener(allEventListener);
+
+            {
+                final JSONArray data = new JSONArray();
+                data.put("foo");
+
+                final Packet<JSONArray> eventPacket = new Packet<>(Parser.EVENT, data);
+
+                final Emitter.Listener messageListener = Mockito.mock(Emitter.Listener.class);
+                socket.on("foo", messageListener);
+
+                socket.onEvent(eventPacket);
+
+                Mockito.verify(messageListener, Mockito.times(1)).call();
+            }
+            {
+                final JSONArray data = new JSONArray();
+                data.put("bar");
+
+                final Packet<JSONArray> eventPacket = new Packet<>(Parser.EVENT, data);
+
+                final Emitter.Listener messageListener = Mockito.mock(Emitter.Listener.class);
+                socket.on("bar", messageListener);
+
+                socket.onEvent(eventPacket);
+
+                Mockito.verify(messageListener, Mockito.times(1)).call();
+            }
+            return null;
+        }).when(connectionListener).call(Mockito.any());
+        namespace.on("connection", connectionListener);
+
+        final EngineIoWebSocketImpl webSocket = new EngineIoWebSocketImpl();
+        engineIoServer.handleWebSocket(webSocket);
+
+        Mockito.verify(connectionListener, Mockito.times(1))
+                .call(Mockito.any(SocketIoSocket.class));
+        Mockito.verify(allEventListener, Mockito.times(1))
+                .event(Mockito.eq("foo"));
+        Mockito.verify(allEventListener, Mockito.times(1))
+                .event(Mockito.eq("bar"));
+    }
+
+    @Test
     public void test_onAck() {
         class PacketId {
             private int id;

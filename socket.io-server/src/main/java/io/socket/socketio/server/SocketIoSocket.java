@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Socket.io socket class.
@@ -20,6 +21,20 @@ import java.util.HashSet;
 public final class SocketIoSocket extends Emitter {
 
     private static final Object[] EMPTY_ARGS = new Object[0];
+
+    /**
+     * Callback for all user events received on socket.
+     */
+    public interface AllEventListener {
+
+        /**
+         * Called for any user events received.
+         *
+         * @param eventName Name of event received.
+         * @param args Arguments of event received.
+         */
+        void event(String eventName, Object... args);
+    }
 
     /**
      * Callback for remote received acknowledgement.
@@ -47,6 +62,7 @@ public final class SocketIoSocket extends Emitter {
         void sendAcknowledgement(Object... args);
     }
 
+    private final ConcurrentLinkedQueue<AllEventListener> mAllEventListeners = new ConcurrentLinkedQueue<>();
     private final SocketIoNamespaceImpl mNamespace;
     private final SocketIoClient mClient;
     private final SocketIoAdapter mAdapter;
@@ -231,6 +247,24 @@ public final class SocketIoSocket extends Emitter {
         mRooms.clear();
     }
 
+    /**
+     * Register listener for all user events.
+     *
+     * @param listener Listener to register.
+     */
+    public void registerAllEventListener(AllEventListener listener) {
+        mAllEventListeners.add(listener);
+    }
+
+    /**
+     * Unregister listener registered with registerAllEventListener.
+     *
+     * @param listener Listener to unregister.
+     */
+    public void unregisterAllEventListener(AllEventListener listener) {
+        mAllEventListeners.remove(listener);
+    }
+
     void onEvent(final Packet packet) {
         Object[] args = (packet.data != null)? unpackEventData((JSONArray)packet.data) : EMPTY_ARGS;
 
@@ -250,6 +284,9 @@ public final class SocketIoSocket extends Emitter {
         System.arraycopy(args, 1, eventArgs, 0, eventArgs.length);
 
         emit(event, eventArgs);
+        for (AllEventListener listener : mAllEventListeners) {
+            listener.event(event, eventArgs);
+        }
     }
 
     void onAck(Packet packet) {
