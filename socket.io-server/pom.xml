@@ -23,7 +23,7 @@
         <dependency>
             <groupId>io.socket</groupId>
             <artifactId>engine.io-server</artifactId>
-            <version>1.2.0</version>
+            <version>1.2.1</version>
         </dependency>
         <dependency>
             <groupId>javax</groupId>
@@ -60,8 +60,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.5.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <encoding>UTF-8</encoding>
                     <compilerArgs>
                         <arg>-Xlint:unchecked</arg>
