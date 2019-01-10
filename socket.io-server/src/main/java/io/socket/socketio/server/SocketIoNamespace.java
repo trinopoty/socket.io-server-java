@@ -54,7 +54,7 @@ public abstract class SocketIoNamespace extends Emitter {
      *
      * @param room Room to send message to or null.
      * @param event Name of event to raise on remote client.
-     * @param args Arguments to send. Supported types are: {@link org.json.JSONObject}, {@link org.json.JSONArray}, null
+     * @param args Arguments to send. Supported types are: JSONObject, JSONArray, null
      */
     public final void broadcast(String room, String event, Object... args) throws IllegalArgumentException {
         broadcast((room != null)? (new String[] { room }) : null, event, args);
@@ -66,7 +66,7 @@ public abstract class SocketIoNamespace extends Emitter {
      *
      * @param rooms Rooms to send message to.
      * @param event Name of event to raise on remote client.
-     * @param args Array of arguments to send. Supported types are: {@link org.json.JSONObject}, {@link org.json.JSONArray}, null
+     * @param args Array of arguments to send. Supported types are: JSONObject, JSONArray, null
      * @throws IllegalArgumentException If event is null or argument is not of supported type.
      */
     public abstract void broadcast(String[] rooms, String event, Object[] args) throws IllegalArgumentException;

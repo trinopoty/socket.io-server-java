@@ -31,10 +31,8 @@ final class PacketUtils {
         if (event != null) {
             array.put(event);
         }
-        if (args != null) {
-            for (Object arg : args) {
-                array.put(arg);
-            }
+        for (Object arg : args) {
+            array.put(arg);
         }
         if (!PacketUtils.isPacketDataValid(array)) {
             throw new IllegalArgumentException("args contain invalid data type.");

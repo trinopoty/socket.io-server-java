@@ -10,7 +10,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Socket.io namespace class.
  */
-@SuppressWarnings("WeakerAccess")
 final class SocketIoNamespaceImpl extends SocketIoNamespace {
 
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")

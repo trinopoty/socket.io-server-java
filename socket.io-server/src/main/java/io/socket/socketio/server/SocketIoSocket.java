@@ -120,7 +120,7 @@ public final class SocketIoSocket extends Emitter {
      *
      * @param room Room to send message to.
      * @param event Name of event to raise on remote client.
-     * @param args Arguments to send. Supported types are: {@link org.json.JSONObject}, {@link org.json.JSONArray}, null.
+     * @param args Arguments to send. Supported types are: JSONObject, JSONArray, null.
      * @throws IllegalArgumentException If event is null or argument is not of supported type.
      */
     public void broadcast(String room, String event, Object... args) throws IllegalArgumentException {
@@ -133,7 +133,7 @@ public final class SocketIoSocket extends Emitter {
      *
      * @param rooms Rooms to send message to.
      * @param event Name of event to raise on remote client.
-     * @param args Array of arguments to send. Supported types are: {@link org.json.JSONObject}, {@link org.json.JSONArray}, null.
+     * @param args Array of arguments to send. Supported types are: JSONObject, JSONArray, null.
      * @throws IllegalArgumentException If argument is not of supported type.
      */
     public void broadcast(String[] rooms, String event, Object[] args) throws IllegalArgumentException {
@@ -149,7 +149,7 @@ public final class SocketIoSocket extends Emitter {
      * Send data to remote client.
      *
      * @param event Name of event to raise on remote client.
-     * @param args Array of arguments to send. Supported types are: {@link org.json.JSONObject}, {@link org.json.JSONArray}, null.
+     * @param args Array of arguments to send. Supported types are: JSONObject, JSONArray, null.
      * @throws IllegalArgumentException If event is null or argument is not of supported type.
      */
     public void send(String event, Object... args) throws IllegalArgumentException {
@@ -160,7 +160,7 @@ public final class SocketIoSocket extends Emitter {
      * Send data to remote client.
      *
      * @param event Name of event to raise on remote client.
-     * @param args Array of arguments to send. Supported types are: {@link org.json.JSONObject}, {@link org.json.JSONArray}, null.
+     * @param args Array of arguments to send. Supported types are: JSONObject, JSONArray, null.
      * @param acknowledgementCallback Acknowledgement callback to call on remote ack or null.
      * @throws IllegalArgumentException If event is null or argument is not of supported type.
      */
@@ -237,13 +237,10 @@ public final class SocketIoSocket extends Emitter {
         if (packet.id >= 0) {
             final Object[] emitArgs = new Object[args.length + 1];
             System.arraycopy(args, 0, emitArgs, 0, args.length);
-            emitArgs[args.length] = new ReceivedByLocalAcknowledgementCallback() {
-                @Override
-                public void sendAcknowledgement(Object... args) {
-                    final Packet ackPacket = PacketUtils.createDataPacket(Parser.ACK, null, args);
-                    ackPacket.id = packet.id;
-                    mClient.sendPacket(ackPacket);
-                }
+            emitArgs[args.length] = (ReceivedByLocalAcknowledgementCallback) args1 -> {
+                final Packet ackPacket = PacketUtils.createDataPacket(Parser.ACK, null, args1);
+                ackPacket.id = packet.id;
+                mClient.sendPacket(ackPacket);
             };
             args = emitArgs;
         }

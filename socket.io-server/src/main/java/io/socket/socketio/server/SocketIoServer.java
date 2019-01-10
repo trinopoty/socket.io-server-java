@@ -1,6 +1,5 @@
 package io.socket.socketio.server;
 
-import io.socket.emitter.Emitter;
 import io.socket.engineio.server.EngineIoServer;
 import io.socket.engineio.server.EngineIoSocket;
 import io.socket.parser.IOParser;
@@ -43,13 +42,10 @@ public final class SocketIoServer {
 
         namespace("/");
 
-        server.on("connection", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                final EngineIoSocket socket = (EngineIoSocket) args[0];
-                final SocketIoClient client = new SocketIoClient(SocketIoServer.this, socket);
-                client.connect("/");
-            }
+        server.on("connection", args -> {
+            final EngineIoSocket socket = (EngineIoSocket) args[0];
+            final SocketIoClient client = new SocketIoClient(SocketIoServer.this, socket);
+            client.connect("/");
         });
     }
 
@@ -133,23 +129,9 @@ public final class SocketIoServer {
     }
 
     public synchronized SocketIoNamespace namespace(final Pattern namespaceRegex) {
-        SocketIoNamespaceProvider provider = mNamespaceRegexProviderMap.get(namespaceRegex);
-        if (provider == null) {
-            provider = new SocketIoNamespaceProvider() {
-                @Override
-                public boolean checkNamespace(String namespace) {
-                    return namespaceRegex.matcher(namespace).matches();
-                }
-            };
-            mNamespaceRegexProviderMap.put(namespaceRegex, provider);
-        }
-
-        SocketIoNamespaceGroupImpl nsp = mNamespaceGroups.get(provider);
-        if (nsp == null) {
-            nsp = new SocketIoNamespaceGroupImpl(this);
-            mNamespaceGroups.put(provider, nsp);
-        }
-
-        return nsp;
+        final SocketIoNamespaceProvider provider = mNamespaceRegexProviderMap.computeIfAbsent(
+                namespaceRegex,
+                r -> namespace -> r.matcher(namespace).matches());
+        return namespace(provider);
     }
 }

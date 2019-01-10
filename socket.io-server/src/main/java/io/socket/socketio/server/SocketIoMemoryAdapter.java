@@ -2,7 +2,9 @@ package io.socket.socketio.server;
 
 import io.socket.parser.Packet;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * In-memory adapter class.
@@ -77,10 +79,10 @@ public final class SocketIoMemoryAdapter extends SocketIoAdapter {
         }
 
         if (!mSocketRooms.containsKey(socket.getId())) {
-            mSocketRooms.put(socket.getId(), new HashSet<String>());
+            mSocketRooms.put(socket.getId(), new HashSet<>());
         }
         if (!mRoomSockets.containsKey(room)) {
-            mRoomSockets.put(room, new HashSet<SocketIoSocket>());
+            mRoomSockets.put(room, new HashSet<>());
         }
 
         mSocketRooms.get(socket.getId()).add(room);

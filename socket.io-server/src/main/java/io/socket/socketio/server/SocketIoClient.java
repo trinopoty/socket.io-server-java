@@ -1,7 +1,6 @@
 package io.socket.socketio.server;
 
 import io.socket.client.Url;
-import io.socket.emitter.Emitter;
 import io.socket.engineio.server.EngineIoSocket;
 import io.socket.engineio.server.ReadyState;
 import io.socket.parser.IOParser;
@@ -50,16 +49,13 @@ final class SocketIoClient {
      */
     void sendPacket(final Packet packet) {
         if (mConnection.getReadyState() == ReadyState.OPEN) {
-            mEncoder.encode(packet, new Parser.Encoder.Callback() {
-                @Override
-                public void call(Object[] objects) {
-                    // TODO: Check for volatile flag
+            mEncoder.encode(packet, objects -> {
+                // TODO: Check for volatile flag
 
-                    for (Object item : objects) {
-                        final io.socket.engineio.parser.Packet engineIoPacket = new io.socket.engineio.parser.Packet(io.socket.engineio.parser.Packet.MESSAGE);
-                        engineIoPacket.data = item;
-                        mConnection.send(engineIoPacket);
-                    }
+                for (Object item : objects) {
+                    final io.socket.engineio.parser.Packet engineIoPacket = new io.socket.engineio.parser.Packet(io.socket.engineio.parser.Packet.MESSAGE);
+                    engineIoPacket.data = item;
+                    mConnection.send(engineIoPacket);
                 }
             });
         }
@@ -126,51 +122,35 @@ final class SocketIoClient {
     }
 
     private void setup() {
-        mDecoder.onDecoded(new Parser.Decoder.Callback() {
-            @Override
-            public void call(Packet packet) {
-                if (packet.type == IOParser.CONNECT) {
-                    try {
-                        connect(Url.parse(packet.nsp).getPath());
-                    } catch (URISyntaxException ex) {
-                        // TODO: Fix this later
-                        throw new RuntimeException(ex);
-                    }
-                } else {
-                    final SocketIoSocket socket = mNamespaceSockets.get(packet.nsp);
-                    if (socket != null) {
-                        socket.onPacket(packet);
-                    }
-                }
-            }
-        });
-        mConnection.on("data", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
+        mDecoder.onDecoded(packet -> {
+            if (packet.type == IOParser.CONNECT) {
                 try {
-                    final Object data = args[0];
-                    if (data instanceof String) {
-                        mDecoder.add((String) data);
-                    } else if(data instanceof byte[]) {
-                        mDecoder.add((byte[]) data);
-                    }
-                } catch (Exception ex) {
-                    onError(ex.getMessage());
+                    connect(Url.parse(packet.nsp).getPath());
+                } catch (URISyntaxException ex) {
+                    // TODO: Fix this later
+                    throw new RuntimeException(ex);
+                }
+            } else {
+                final SocketIoSocket socket = mNamespaceSockets.get(packet.nsp);
+                if (socket != null) {
+                    socket.onPacket(packet);
                 }
             }
         });
-        mConnection.on("error", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                onError((String) args[0]);
+        mConnection.on("data", args -> {
+            try {
+                final Object data = args[0];
+                if (data instanceof String) {
+                    mDecoder.add((String) data);
+                } else if(data instanceof byte[]) {
+                    mDecoder.add((byte[]) data);
+                }
+            } catch (Exception ex) {
+                onError(ex.getMessage());
             }
         });
-        mConnection.on("close", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                onClose((String) args[0]);
-            }
-        });
+        mConnection.on("error", args -> onError((String) args[0]));
+        mConnection.on("close", args -> onClose((String) args[0]));
     }
 
     private void destroy() {
