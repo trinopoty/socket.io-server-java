@@ -8,7 +8,9 @@ var socket = io('http://127.0.0.1:' + port, {
 socket.on('connect', function () {
     socket.emit('foo', 1, 'bar');
 
-    process.exit(0);
+    setTimeout(function () {
+        process.exit(0);
+    }, 100);
 });
 socket.connect();
 

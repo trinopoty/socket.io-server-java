@@ -12,13 +12,15 @@ final class Utils {
                 "PORT=" + port
         });
         try {
+            int result = process.waitFor();
+
             /*InputStream inputStream = process.getInputStream();
             byte[] buffer = new byte[inputStream.available()];
             //noinspection ResultOfMethodCallIgnored
             inputStream.read(buffer);
             System.out.println("[script:stdout]\n" + (new String(buffer, StandardCharsets.UTF_8)));*/
 
-            return process.waitFor();
+            return result;
         } catch (InterruptedException ex) {
             throw new RuntimeException(ex);
         }

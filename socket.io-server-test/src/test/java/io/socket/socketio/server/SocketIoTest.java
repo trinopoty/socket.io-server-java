@@ -4,8 +4,7 @@ import io.socket.emitter.Emitter;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
@@ -221,28 +220,17 @@ public final class SocketIoTest {
         final ServerWrapper serverWrapper = new ServerWrapper();
         final SocketIoNamespace namespace = serverWrapper.getSocketIoServer().namespace("/");
 
-        final Timer timer = new Timer();
         namespace.on("connection", args -> {
             final SocketIoSocket socket = (SocketIoSocket) args[0];
             socket.on("join_foo", args1 -> {
                 socket.joinRoom("foo_room");
 
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        namespace.broadcast("foo_room", "foo");
-                    }
-                }, 100);
+                namespace.broadcast("foo_room", "foo");
             });
             socket.on("join_bar", args1 -> {
                 socket.joinRoom("bar_room");
 
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        namespace.broadcast("bar_room", "bar");
-                    }
-                }, 100);
+                namespace.broadcast("bar_room", "bar");
             });
         });
         try {
@@ -253,26 +241,21 @@ public final class SocketIoTest {
         }
     }
 
-    // Disabled due to chances of failure
-    /*@Test
+    @Test
     public void test_broadcast_to_all_clients_except_one() throws Exception {
         final ServerWrapper serverWrapper = new ServerWrapper();
-        final SocketIoNamespaceImpl namespace = serverWrapper.getSocketIoServer().namespace("/");
+        final SocketIoNamespace namespace = serverWrapper.getSocketIoServer().namespace("/");
 
         final ArrayList<SocketIoSocket> socketList = new ArrayList<>();
         namespace.on("connection", args -> {
             final SocketIoSocket socket = (SocketIoSocket) args[0];
-            if (socketList.size() <= 0) {
-                socketList.add(socket);
+            synchronized (socketList) {
+                if (socketList.size() <= 0) {
+                    socketList.add(socket);
+                }
             }
 
-            socket.on("message", args1 -> {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException ignore) {
-                }
-                socketList.get(0).broadcast(null, "foo");
-            });
+            socket.on("foo", args1 -> socketList.get(0).broadcast(null, "bar"));
         });
         try {
             serverWrapper.startServer();
@@ -280,5 +263,5 @@ public final class SocketIoTest {
         } finally {
             serverWrapper.stopServer();
         }
-    }*/
+    }
 }
