@@ -4,8 +4,6 @@ import io.socket.parser.Packet;
 import io.socket.parser.Parser;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 public final class SocketIoAdapterTest {
 
@@ -36,15 +34,12 @@ public final class SocketIoAdapterTest {
         });
         Mockito.doCallRealMethod().when(adapter)
                 .broadcast(Mockito.any(Packet.class), Mockito.any(String[].class));
-        Mockito.doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) {
-                return null;
-            }
-        }).when(adapter).broadcast(Mockito.any(Packet.class), Mockito.any(String[].class), Mockito.any(String[].class));
+        Mockito.doAnswer(invocationOnMock -> null)
+                .when(adapter)
+                .broadcast(Mockito.any(Packet.class), Mockito.any(String[].class), Mockito.any(String[].class));
 
         adapter.broadcast(new Packet(Parser.CONNECT), null);
         Mockito.verify(adapter, Mockito.times(1))
-                .broadcast(Mockito.any(Packet.class), Mockito.<String[]>isNull(), Mockito.<String[]>isNull());
+                .broadcast(Mockito.any(Packet.class), Mockito.<String[]>isNull(), Mockito.isNull());
     }
 }

@@ -6,8 +6,6 @@ import io.socket.parser.Parser;
 import org.json.JSONArray;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import static org.junit.Assert.*;
 
@@ -31,34 +29,28 @@ public final class SocketIoNamespaceImplTest {
     public void test_broadcast_all_rooms() {
         final SocketIoAdapter adapter = Mockito.mock(SocketIoAdapter.class);
         Mockito.doCallRealMethod().when(adapter)
-                .broadcast(Mockito.any(Packet.class), Mockito.<String[]>isNull());
-        Mockito.doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                final Packet packet = invocationOnMock.getArgument(0);
-                final String[] rooms = invocationOnMock.getArgument(1);
-                final String[] socketsExcluded = invocationOnMock.getArgument(2);
+                .broadcast(Mockito.any(Packet.class), Mockito.isNull());
+        Mockito.doAnswer(invocationOnMock -> {
+            final Packet packet = invocationOnMock.getArgument(0);
+            final String[] rooms = invocationOnMock.getArgument(1);
+            final String[] socketsExcluded = invocationOnMock.getArgument(2);
 
-                assertEquals(Parser.EVENT, packet.type);
-                assertNotNull(packet.data);
-                assertEquals(JSONArray.class, packet.data.getClass());
-                assertEquals(1, ((JSONArray) packet.data).length());
-                assertEquals("foo", ((JSONArray) packet.data).get(0));
+            assertEquals(Parser.EVENT, packet.type);
+            assertNotNull(packet.data);
+            assertEquals(JSONArray.class, packet.data.getClass());
+            assertEquals(1, ((JSONArray) packet.data).length());
+            assertEquals("foo", ((JSONArray) packet.data).get(0));
 
-                assertNull(rooms);
-                assertNull(socketsExcluded);
+            assertNull(rooms);
+            assertNull(socketsExcluded);
 
-                return null;
-            }
-        }).when(adapter).broadcast(Mockito.any(Packet.class), Mockito.<String[]>isNull(), Mockito.<String[]>isNull());
+            return null;
+        }).when(adapter).broadcast(Mockito.any(Packet.class), Mockito.isNull(), Mockito.isNull());
 
         final SocketIoAdapter.AdapterFactory adapterFactory = Mockito.mock(SocketIoAdapter.AdapterFactory.class);
-        Mockito.doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) {
-                return adapter;
-            }
-        }).when(adapterFactory).createAdapter(Mockito.any(SocketIoNamespaceImpl.class));
+        Mockito.doAnswer(invocationOnMock -> adapter)
+                .when(adapterFactory)
+                .createAdapter(Mockito.any(SocketIoNamespaceImpl.class));
 
         final SocketIoServer server = Mockito.spy(new SocketIoServer(
                 new EngineIoServer(),
@@ -68,7 +60,7 @@ public final class SocketIoNamespaceImplTest {
 
         namespace.broadcast(null, "foo");
         Mockito.verify(adapter, Mockito.times(1))
-                .broadcast(Mockito.any(Packet.class), Mockito.<String[]>isNull(), Mockito.<String[]>isNull());
+                .broadcast(Mockito.any(Packet.class), Mockito.isNull(), Mockito.isNull());
     }
 
     @Test
@@ -76,36 +68,30 @@ public final class SocketIoNamespaceImplTest {
         final SocketIoAdapter adapter = Mockito.mock(SocketIoAdapter.class);
         Mockito.doCallRealMethod().when(adapter)
                 .broadcast(Mockito.any(Packet.class), Mockito.any(String[].class));
-        Mockito.doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                final Packet packet = invocationOnMock.getArgument(0);
-                final String[] rooms = invocationOnMock.getArgument(1);
-                final String[] socketsExcluded = invocationOnMock.getArgument(2);
+        Mockito.doAnswer(invocationOnMock -> {
+            final Packet packet = invocationOnMock.getArgument(0);
+            final String[] rooms = invocationOnMock.getArgument(1);
+            final String[] socketsExcluded = invocationOnMock.getArgument(2);
 
-                assertEquals(Parser.EVENT, packet.type);
-                assertNotNull(packet.data);
-                assertEquals(JSONArray.class, packet.data.getClass());
-                assertEquals(1, ((JSONArray) packet.data).length());
-                assertEquals("bar", ((JSONArray) packet.data).get(0));
+            assertEquals(Parser.EVENT, packet.type);
+            assertNotNull(packet.data);
+            assertEquals(JSONArray.class, packet.data.getClass());
+            assertEquals(1, ((JSONArray) packet.data).length());
+            assertEquals("bar", ((JSONArray) packet.data).get(0));
 
-                assertNotNull(rooms);
-                assertEquals(1, rooms.length);
-                assertEquals("foo", rooms[0]);
+            assertNotNull(rooms);
+            assertEquals(1, rooms.length);
+            assertEquals("foo", rooms[0]);
 
-                assertNull(socketsExcluded);
+            assertNull(socketsExcluded);
 
-                return null;
-            }
-        }).when(adapter).broadcast(Mockito.any(Packet.class), Mockito.any(String[].class), Mockito.<String[]>isNull());
+            return null;
+        }).when(adapter).broadcast(Mockito.any(Packet.class), Mockito.any(String[].class), Mockito.isNull());
 
         final SocketIoAdapter.AdapterFactory adapterFactory = Mockito.mock(SocketIoAdapter.AdapterFactory.class);
-        Mockito.doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) {
-                return adapter;
-            }
-        }).when(adapterFactory).createAdapter(Mockito.any(SocketIoNamespaceImpl.class));
+        Mockito.doAnswer(invocationOnMock -> adapter)
+                .when(adapterFactory)
+                .createAdapter(Mockito.any(SocketIoNamespaceImpl.class));
 
         final SocketIoServer server = Mockito.spy(new SocketIoServer(
                 new EngineIoServer(),
@@ -115,7 +101,7 @@ public final class SocketIoNamespaceImplTest {
 
         namespace.broadcast("foo", "bar");
         Mockito.verify(adapter, Mockito.times(1))
-                .broadcast(Mockito.any(Packet.class), Mockito.any(String[].class), Mockito.<String[]>isNull());
+                .broadcast(Mockito.any(Packet.class), Mockito.any(String[].class), Mockito.isNull());
     }
 
     @Test
@@ -123,35 +109,29 @@ public final class SocketIoNamespaceImplTest {
         final SocketIoAdapter adapter = Mockito.mock(SocketIoAdapter.class);
         Mockito.doCallRealMethod().when(adapter)
                 .broadcast(Mockito.any(Packet.class), Mockito.any(String[].class));
-        Mockito.doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                final Packet packet = invocationOnMock.getArgument(0);
-                final String[] rooms = invocationOnMock.getArgument(1);
-                final String[] socketsExcluded = invocationOnMock.getArgument(2);
+        Mockito.doAnswer(invocationOnMock -> {
+            final Packet packet = invocationOnMock.getArgument(0);
+            final String[] rooms = invocationOnMock.getArgument(1);
+            final String[] socketsExcluded = invocationOnMock.getArgument(2);
 
-                assertEquals(Parser.EVENT, packet.type);
-                assertNotNull(packet.data);
-                assertEquals(JSONArray.class, packet.data.getClass());
-                assertEquals(1, ((JSONArray) packet.data).length());
-                assertEquals("baz", ((JSONArray) packet.data).get(0));
+            assertEquals(Parser.EVENT, packet.type);
+            assertNotNull(packet.data);
+            assertEquals(JSONArray.class, packet.data.getClass());
+            assertEquals(1, ((JSONArray) packet.data).length());
+            assertEquals("baz", ((JSONArray) packet.data).get(0));
 
-                assertNotNull(rooms);
-                assertArrayEquals(new String[] { "foo", "bar" }, rooms);
+            assertNotNull(rooms);
+            assertArrayEquals(new String[] { "foo", "bar" }, rooms);
 
-                assertNull(socketsExcluded);
+            assertNull(socketsExcluded);
 
-                return null;
-            }
-        }).when(adapter).broadcast(Mockito.any(Packet.class), Mockito.any(String[].class), Mockito.<String[]>isNull());
+            return null;
+        }).when(adapter).broadcast(Mockito.any(Packet.class), Mockito.any(String[].class), Mockito.isNull());
 
         final SocketIoAdapter.AdapterFactory adapterFactory = Mockito.mock(SocketIoAdapter.AdapterFactory.class);
-        Mockito.doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) {
-                return adapter;
-            }
-        }).when(adapterFactory).createAdapter(Mockito.any(SocketIoNamespaceImpl.class));
+        Mockito.doAnswer(invocationOnMock -> adapter)
+                .when(adapterFactory)
+                .createAdapter(Mockito.any(SocketIoNamespaceImpl.class));
 
         final SocketIoServer server = Mockito.spy(new SocketIoServer(
                 new EngineIoServer(),
@@ -161,6 +141,6 @@ public final class SocketIoNamespaceImplTest {
 
         namespace.broadcast(new String[] { "foo", "bar" }, "baz", null);
         Mockito.verify(adapter, Mockito.times(1))
-                .broadcast(Mockito.any(Packet.class), Mockito.any(String[].class), Mockito.<String[]>isNull());
+                .broadcast(Mockito.any(Packet.class), Mockito.any(String[].class), Mockito.isNull());
     }
 }

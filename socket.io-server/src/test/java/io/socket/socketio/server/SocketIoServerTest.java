@@ -64,17 +64,14 @@ public final class SocketIoServerTest {
         assertFalse(server.checkNamespace("foo1a"));
         assertFalse(server.checkNamespace("bar"));
 
-        server.namespace(new SocketIoNamespaceProvider() {
-            @Override
-            public boolean checkNamespace(String namespace) {
-                switch (namespace) {
-                    case "/bar":
-                        return true;
-                    case "/baz":
-                        return true;
-                }
-                return false;
+        server.namespace(namespace -> {
+            switch (namespace) {
+                case "/bar":
+                    return true;
+                case "/baz":
+                    return true;
             }
+            return false;
         });
         assertTrue(server.checkNamespace("bar"));
         assertTrue(server.checkNamespace("baz"));
@@ -126,13 +123,13 @@ public final class SocketIoServerTest {
 
         final Emitter.Listener disconnectListener = Mockito.mock(Emitter.Listener.class);
 
-        final Emitter.Listener connectionListener = Mockito.spy(new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                final SocketIoSocket socket = (SocketIoSocket) args[0];
-                socket.on("disconnect", disconnectListener);
-            }
-        });
+        final Emitter.Listener connectionListener = Mockito.spy(Emitter.Listener.class);
+        Mockito.doAnswer(invocation -> {
+            final Object[] args = invocation.getArguments();
+            final SocketIoSocket socket = (SocketIoSocket) args[0];
+            socket.on("disconnect", disconnectListener);
+            return null;
+        }).when(connectionListener).call(Mockito.any());
         namespace.on("connect", connectionListener);
 
         final EngineIoWebSocket webSocket = new EngineIoWebSocket() {

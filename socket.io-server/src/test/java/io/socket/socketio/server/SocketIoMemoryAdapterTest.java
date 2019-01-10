@@ -5,12 +5,10 @@ import io.socket.parser.Parser;
 import io.socket.yeast.Yeast;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.util.HashMap;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public final class SocketIoMemoryAdapterTest {
@@ -265,12 +263,7 @@ public final class SocketIoMemoryAdapterTest {
         final HashMap<String, SocketIoSocket> connectedSockets = new HashMap<>();
 
         final SocketIoNamespaceImpl namespace = Mockito.mock(SocketIoNamespaceImpl.class);
-        Mockito.doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) {
-                return connectedSockets;
-            }
-        }).when(namespace).getConnectedSockets();
+        Mockito.doAnswer(invocationOnMock -> connectedSockets).when(namespace).getConnectedSockets();
 
         final SocketIoAdapter adapter = ADAPTER_FACTORY.createAdapter(namespace);
 
@@ -307,12 +300,7 @@ public final class SocketIoMemoryAdapterTest {
         final HashMap<String, SocketIoSocket> connectedSockets = new HashMap<>();
 
         final SocketIoNamespaceImpl namespace = Mockito.mock(SocketIoNamespaceImpl.class);
-        Mockito.doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) {
-                return connectedSockets;
-            }
-        }).when(namespace).getConnectedSockets();
+        Mockito.doAnswer(invocationOnMock -> connectedSockets).when(namespace).getConnectedSockets();
 
         final SocketIoAdapter adapter = ADAPTER_FACTORY.createAdapter(namespace);
 
@@ -349,12 +337,7 @@ public final class SocketIoMemoryAdapterTest {
         final HashMap<String, SocketIoSocket> connectedSockets = new HashMap<>();
 
         final SocketIoNamespaceImpl namespace = Mockito.mock(SocketIoNamespaceImpl.class);
-        Mockito.doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) {
-                return connectedSockets;
-            }
-        }).when(namespace).getConnectedSockets();
+        Mockito.doAnswer(invocationOnMock -> connectedSockets).when(namespace).getConnectedSockets();
 
         final SocketIoAdapter adapter = ADAPTER_FACTORY.createAdapter(namespace);
 
@@ -399,12 +382,7 @@ public final class SocketIoMemoryAdapterTest {
         final HashMap<String, SocketIoSocket> connectedSockets = new HashMap<>();
 
         final SocketIoNamespaceImpl namespace = Mockito.mock(SocketIoNamespaceImpl.class);
-        Mockito.doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) {
-                return connectedSockets;
-            }
-        }).when(namespace).getConnectedSockets();
+        Mockito.doAnswer(invocationOnMock -> connectedSockets).when(namespace).getConnectedSockets();
 
         final SocketIoAdapter adapter = ADAPTER_FACTORY.createAdapter(namespace);
 
@@ -440,12 +418,7 @@ public final class SocketIoMemoryAdapterTest {
         final HashMap<String, SocketIoSocket> connectedSockets = new HashMap<>();
 
         final SocketIoNamespaceImpl namespace = Mockito.mock(SocketIoNamespaceImpl.class);
-        Mockito.doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) {
-                return connectedSockets;
-            }
-        }).when(namespace).getConnectedSockets();
+        Mockito.doAnswer(invocationOnMock -> connectedSockets).when(namespace).getConnectedSockets();
 
         final SocketIoAdapter adapter = ADAPTER_FACTORY.createAdapter(namespace);
 
@@ -489,12 +462,7 @@ public final class SocketIoMemoryAdapterTest {
     private SocketIoSocket createDummySocket() {
         final String sid = Yeast.yeast();
         final SocketIoSocket socket = Mockito.mock(SocketIoSocket.class);
-        Mockito.doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) {
-                return sid;
-            }
-        }).when(socket).getId();
+        Mockito.doAnswer(invocationOnMock -> sid).when(socket).getId();
         return socket;
     }
 }

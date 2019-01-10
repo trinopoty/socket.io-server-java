@@ -21,22 +21,22 @@ public final class SocketIoClientTest {
         final EngineIoServer engineIoServer = new EngineIoServer();
         final SocketIoServer socketIoServer = new SocketIoServer(engineIoServer);
 
-        final Emitter.Listener connectionListener = Mockito.spy(new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                final EngineIoSocket socket = Mockito.spy((EngineIoSocket) args[0]);
-                final SocketIoClient client = new SocketIoClient(socketIoServer, socket);
+        final Emitter.Listener connectionListener = Mockito.spy(Emitter.Listener.class);
+        Mockito.doAnswer(invocation -> {
+            final Object[] args = invocation.getArguments();
+            final EngineIoSocket socket = Mockito.spy((EngineIoSocket) args[0]);
+            final SocketIoClient client = new SocketIoClient(socketIoServer, socket);
 
-                assertEquals(socket.getId(), client.getId());
-                assertEquals(socket, client.getConnection());
-                Mockito.verify(socket, Mockito.times(1))
-                        .on(Mockito.eq("data"), Mockito.any(Emitter.Listener.class));
-                Mockito.verify(socket, Mockito.times(1))
-                        .on(Mockito.eq("error"), Mockito.any(Emitter.Listener.class));
-                Mockito.verify(socket, Mockito.times(1))
-                        .on(Mockito.eq("close"), Mockito.any(Emitter.Listener.class));
-            }
-        });
+            assertEquals(socket.getId(), client.getId());
+            assertEquals(socket, client.getConnection());
+            Mockito.verify(socket, Mockito.times(1))
+                    .on(Mockito.eq("data"), Mockito.any(Emitter.Listener.class));
+            Mockito.verify(socket, Mockito.times(1))
+                    .on(Mockito.eq("error"), Mockito.any(Emitter.Listener.class));
+            Mockito.verify(socket, Mockito.times(1))
+                    .on(Mockito.eq("close"), Mockito.any(Emitter.Listener.class));
+            return null;
+        }).when(connectionListener).call(Mockito.any());
         engineIoServer.on("connection", connectionListener);
         engineIoServer.handleWebSocket(new EngineIoWebSocketImpl());
 
@@ -51,27 +51,27 @@ public final class SocketIoClientTest {
 
         final EngineIoWebSocket webSocket = Mockito.spy(new EngineIoWebSocketImpl());
 
-        final Emitter.Listener connectionListener = Mockito.spy(new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                final EngineIoSocket socket = (EngineIoSocket) args[0];
-                final SocketIoClient client = new SocketIoClient(socketIoServer, socket);
+        final Emitter.Listener connectionListener = Mockito.spy(Emitter.Listener.class);
+        Mockito.doAnswer(invocation -> {
+            final Object[] args = invocation.getArguments();
+            final EngineIoSocket socket = (EngineIoSocket) args[0];
+            final SocketIoClient client = new SocketIoClient(socketIoServer, socket);
 
-                final JSONArray packetData = new JSONArray();
-                packetData.put("foo");
-                packetData.put(1);
+            final JSONArray packetData = new JSONArray();
+            packetData.put("foo");
+            packetData.put(1);
 
-                final Packet<JSONArray> packet = new Packet<>(Parser.EVENT, packetData);
+            final Packet<JSONArray> packet = new Packet<>(Parser.EVENT, packetData);
 
-                try {
-                    Mockito.reset(webSocket);
-                    client.sendPacket(packet);
-                    Mockito.verify(webSocket, Mockito.times(1))
-                            .write(Mockito.anyString());
-                } catch (IOException ignore) {
-                }
+            try {
+                Mockito.reset(webSocket);
+                client.sendPacket(packet);
+                Mockito.verify(webSocket, Mockito.times(1))
+                        .write(Mockito.anyString());
+            } catch (IOException ignore) {
             }
-        });
+            return null;
+        }).when(connectionListener).call(Mockito.any());
         engineIoServer.on("connection", connectionListener);
         engineIoServer.handleWebSocket(webSocket);
 
@@ -86,30 +86,30 @@ public final class SocketIoClientTest {
 
         final EngineIoWebSocket webSocket = Mockito.spy(new EngineIoWebSocketImpl());
 
-        final Emitter.Listener connectionListener = Mockito.spy(new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                final EngineIoSocket socket = (EngineIoSocket) args[0];
-                final SocketIoClient client = new SocketIoClient(socketIoServer, socket);
+        final Emitter.Listener connectionListener = Mockito.spy(Emitter.Listener.class);
+        Mockito.doAnswer(invocation -> {
+            final Object[] args = invocation.getArguments();
+            final EngineIoSocket socket = (EngineIoSocket) args[0];
+            final SocketIoClient client = new SocketIoClient(socketIoServer, socket);
 
-                final JSONArray packetData = new JSONArray();
-                packetData.put("foo");
-                packetData.put(1);
-                packetData.put(new byte[16]);
+            final JSONArray packetData = new JSONArray();
+            packetData.put("foo");
+            packetData.put(1);
+            packetData.put(new byte[16]);
 
-                final Packet<JSONArray> packet = new Packet<>(Parser.EVENT, packetData);
+            final Packet<JSONArray> packet = new Packet<>(Parser.EVENT, packetData);
 
-                try {
-                    Mockito.reset(webSocket);
-                    client.sendPacket(packet);
-                    Mockito.verify(webSocket, Mockito.times(1))
-                            .write(Mockito.anyString());
-                    Mockito.verify(webSocket, Mockito.times(1))
-                            .write(Mockito.any(byte[].class));
-                } catch (IOException ignore) {
-                }
+            try {
+                Mockito.reset(webSocket);
+                client.sendPacket(packet);
+                Mockito.verify(webSocket, Mockito.times(1))
+                        .write(Mockito.anyString());
+                Mockito.verify(webSocket, Mockito.times(1))
+                        .write(Mockito.any(byte[].class));
+            } catch (IOException ignore) {
             }
-        });
+            return null;
+        }).when(connectionListener).call(Mockito.any());
         engineIoServer.on("connection", connectionListener);
         engineIoServer.handleWebSocket(webSocket);
 
@@ -124,29 +124,29 @@ public final class SocketIoClientTest {
 
         final EngineIoWebSocket webSocket = Mockito.spy(new EngineIoWebSocketImpl());
 
-        final Emitter.Listener connectionListener = Mockito.spy(new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                final EngineIoSocket socket = (EngineIoSocket) args[0];
-                final SocketIoClient client = new SocketIoClient(socketIoServer, socket);
+        final Emitter.Listener connectionListener = Mockito.spy(Emitter.Listener.class);
+        Mockito.doAnswer(invocation -> {
+            final Object[] args = invocation.getArguments();
+            final EngineIoSocket socket = (EngineIoSocket) args[0];
+            final SocketIoClient client = new SocketIoClient(socketIoServer, socket);
 
-                final JSONArray packetData = new JSONArray();
-                packetData.put("foo");
-                packetData.put(1);
+            final JSONArray packetData = new JSONArray();
+            packetData.put("foo");
+            packetData.put(1);
 
-                socket.close();
+            socket.close();
 
-                final Packet<JSONArray> packet = new Packet<>(Parser.EVENT, packetData);
+            final Packet<JSONArray> packet = new Packet<>(Parser.EVENT, packetData);
 
-                try {
-                    Mockito.reset(webSocket);
-                    client.sendPacket(packet);
-                    Mockito.verify(webSocket, Mockito.times(0))
-                            .write(Mockito.anyString());
-                } catch (IOException ignore) {
-                }
+            try {
+                Mockito.reset(webSocket);
+                client.sendPacket(packet);
+                Mockito.verify(webSocket, Mockito.times(0))
+                        .write(Mockito.anyString());
+            } catch (IOException ignore) {
             }
-        });
+            return null;
+        }).when(connectionListener).call(Mockito.any());
         engineIoServer.on("connection", connectionListener);
         engineIoServer.handleWebSocket(webSocket);
 
@@ -161,18 +161,19 @@ public final class SocketIoClientTest {
 
         final EngineIoWebSocket webSocket = Mockito.spy(new EngineIoWebSocketImpl());
 
-        final Emitter.Listener connectionListener = Mockito.spy(new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                final EngineIoSocket socket = Mockito.spy((EngineIoSocket) args[0]);
-                final SocketIoClient client = new SocketIoClient(socketIoServer, socket);
+        final Emitter.Listener connectionListener = Mockito.spy(Emitter.Listener.class);
+        Mockito.doAnswer(invocation -> {
+            final Object[] args = invocation.getArguments();
+            final EngineIoSocket socket = Mockito.spy((EngineIoSocket) args[0]);
+            final SocketIoClient client = new SocketIoClient(socketIoServer, socket);
 
-                client.disconnect();
+            client.disconnect();
 
-                Mockito.verify(socket, Mockito.times(1))
-                        .close();
-            }
-        });
+            Mockito.verify(socket, Mockito.times(1))
+                    .close();
+            return null;
+
+        }).when(connectionListener).call(Mockito.any());
         engineIoServer.on("connection", connectionListener);
         engineIoServer.handleWebSocket(webSocket);
 
@@ -187,19 +188,18 @@ public final class SocketIoClientTest {
 
         final EngineIoWebSocket webSocket = Mockito.spy(new EngineIoWebSocketImpl());
 
-        final Emitter.Listener connectionListener = Mockito.spy(new Emitter.Listener() {
-            @SuppressWarnings("unused")
-            @Override
-            public void call(Object... args) {
-                final EngineIoSocket socket = Mockito.spy((EngineIoSocket) args[0]);
-                final SocketIoClient client = new SocketIoClient(socketIoServer, socket);
+        final Emitter.Listener connectionListener = Mockito.spy(Emitter.Listener.class);
+        Mockito.doAnswer(invocation -> {
+            final Object[] args = invocation.getArguments();
+            final EngineIoSocket socket = Mockito.spy((EngineIoSocket) args[0]);
+            final SocketIoClient client = new SocketIoClient(socketIoServer, socket);
 
-                socket.emit("error", "parse error", null);
+            socket.emit("error", "parse error", null);
 
-                Mockito.verify(socket, Mockito.times(1))
-                        .close();
-            }
-        });
+            Mockito.verify(socket, Mockito.times(1))
+                    .close();
+            return null;
+        }).when(connectionListener).call(Mockito.any());
         engineIoServer.on("connection", connectionListener);
         engineIoServer.handleWebSocket(webSocket);
 
