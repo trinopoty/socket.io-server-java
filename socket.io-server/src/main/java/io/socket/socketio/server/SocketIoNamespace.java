@@ -2,7 +2,7 @@ package io.socket.socketio.server;
 
 import io.socket.emitter.Emitter;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Socket.io namespace class.
@@ -71,5 +71,5 @@ public abstract class SocketIoNamespace extends Emitter {
      */
     public abstract void broadcast(String[] rooms, String event, Object[] args) throws IllegalArgumentException;
 
-    abstract HashMap<String, SocketIoSocket> getConnectedSockets();
+    abstract Map<String, SocketIoSocket> getConnectedSockets();
 }

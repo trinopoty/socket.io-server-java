@@ -4,6 +4,7 @@ import io.socket.emitter.Emitter;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 final class SocketIoNamespaceGroupImpl extends SocketIoNamespace {
@@ -24,8 +25,8 @@ final class SocketIoNamespaceGroupImpl extends SocketIoNamespace {
     }
 
     @Override
-    HashMap<String, SocketIoSocket> getConnectedSockets() {
-        final HashMap<String, SocketIoSocket> sockets = new HashMap<>();
+    Map<String, SocketIoSocket> getConnectedSockets() {
+        final Map<String, SocketIoSocket> sockets = new HashMap<>();
         for (SocketIoNamespaceImpl namespace : mChildNamespaces) {
             sockets.putAll(namespace.getConnectedSockets());
         }

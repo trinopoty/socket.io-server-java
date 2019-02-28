@@ -2,9 +2,7 @@ package io.socket.socketio.server;
 
 import io.socket.parser.Packet;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 /**
  * In-memory adapter class.
@@ -36,17 +34,17 @@ public final class SocketIoMemoryAdapter extends SocketIoAdapter {
         }
 
         socketsExcluded = (socketsExcluded != null)? socketsExcluded : EMPTY_SOCKET_EXCLUSION;
-        final HashSet<String> socketsExcludedSet = new HashSet<>();
+        final Set<String> socketsExcludedSet = new HashSet<>();
         Collections.addAll(socketsExcludedSet, socketsExcluded);
 
-        final HashMap<String, SocketIoSocket> connectedSockets = mNamespace.getConnectedSockets();
+        final Map<String, SocketIoSocket> connectedSockets = mNamespace.getConnectedSockets();
 
         if (rooms != null) {
-            final HashSet<String> sentSocketIds = new HashSet<>();  // To ensure only one packet is sent if socket is added to multiple rooms
+            final Set<String> sentSocketIds = new HashSet<>();  // To ensure only one packet is sent if socket is added to multiple rooms
 
             for (String room : rooms) {
                 if (mRoomSockets.containsKey(room)) {
-                    final HashSet<SocketIoSocket> sockets = mRoomSockets.get(room);
+                    final Set<SocketIoSocket> sockets = mRoomSockets.get(room);
                     for (SocketIoSocket socket : sockets) {
                         if (!socketsExcludedSet.contains(socket.getId()) &&
                                 !sentSocketIds.contains(socket.getId()) &&
@@ -99,7 +97,7 @@ public final class SocketIoMemoryAdapter extends SocketIoAdapter {
         }
 
         if (mRoomSockets.containsKey(room)) {
-            final HashSet<SocketIoSocket> roomSockets = mRoomSockets.get(room);
+            final Set<SocketIoSocket> roomSockets = mRoomSockets.get(room);
 
             roomSockets.remove(socket);
             if (roomSockets.size() == 0) {
@@ -107,7 +105,7 @@ public final class SocketIoMemoryAdapter extends SocketIoAdapter {
             }
         }
         if (mSocketRooms.containsKey(socket.getId())) {
-            final HashSet<String> socketRooms = mSocketRooms.get(socket.getId());
+            final Set<String> socketRooms = mSocketRooms.get(socket.getId());
 
             socketRooms.remove(room);
             if (socketRooms.size() == 0) {

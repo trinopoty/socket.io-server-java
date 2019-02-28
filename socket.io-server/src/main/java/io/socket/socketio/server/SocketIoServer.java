@@ -5,7 +5,8 @@ import io.socket.engineio.server.EngineIoSocket;
 import io.socket.parser.IOParser;
 import io.socket.parser.Parser;
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 /**
@@ -16,9 +17,9 @@ public final class SocketIoServer {
 
     private final SocketIoServerOptions mOptions;
 
-    private final HashMap<Pattern, SocketIoNamespaceProvider> mNamespaceRegexProviderMap = new HashMap<>();
-    private final HashMap<SocketIoNamespaceProvider, SocketIoNamespaceGroupImpl> mNamespaceGroups = new HashMap<>();
-    private final HashMap<String, SocketIoNamespaceImpl> mNamespaces = new HashMap<>();
+    private final Map<Pattern, SocketIoNamespaceProvider> mNamespaceRegexProviderMap = new ConcurrentHashMap<>();
+    private final Map<SocketIoNamespaceProvider, SocketIoNamespaceGroupImpl> mNamespaceGroups = new ConcurrentHashMap<>();
+    private final Map<String, SocketIoNamespaceImpl> mNamespaces = new ConcurrentHashMap<>();
     private final Parser.Encoder mEncoder = new IOParser.Encoder();
 
     /**

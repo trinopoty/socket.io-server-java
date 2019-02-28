@@ -4,7 +4,8 @@ import io.socket.engineio.server.ReadyState;
 import io.socket.parser.Packet;
 import io.socket.parser.Parser;
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -13,8 +14,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 final class SocketIoNamespaceImpl extends SocketIoNamespace {
 
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private final HashMap<String, SocketIoSocket> mSockets = new HashMap<>();
-    private final HashMap<String, SocketIoSocket> mConnectedSockets = new HashMap<>();
+    private final Map<String, SocketIoSocket> mSockets = new ConcurrentHashMap<>();
+    private final Map<String, SocketIoSocket> mConnectedSockets = new ConcurrentHashMap<>();
     private final AtomicInteger mAckId = new AtomicInteger(0);
 
     SocketIoNamespaceImpl(SocketIoServer server, String name) {
@@ -32,7 +33,7 @@ final class SocketIoNamespaceImpl extends SocketIoNamespace {
     }
 
     @Override
-    HashMap<String, SocketIoSocket> getConnectedSockets() {
+    Map<String, SocketIoSocket> getConnectedSockets() {
         return mConnectedSockets;
     }
 

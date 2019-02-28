@@ -8,7 +8,8 @@ import io.socket.parser.Packet;
 import io.socket.parser.Parser;
 
 import java.net.URISyntaxException;
-import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Represents connection to one client.
@@ -21,8 +22,8 @@ final class SocketIoClient {
     private final Parser.Decoder mDecoder;
     private final String mId;
 
-    private final HashMap<String, SocketIoSocket> mSockets = new HashMap<>();
-    private final HashMap<String, SocketIoSocket> mNamespaceSockets = new HashMap<>();
+    private final Map<String, SocketIoSocket> mSockets = new ConcurrentHashMap<>();
+    private final Map<String, SocketIoSocket> mNamespaceSockets = new ConcurrentHashMap<>();
 
     SocketIoClient(SocketIoServer server, EngineIoSocket connection) {
         mServer = server;

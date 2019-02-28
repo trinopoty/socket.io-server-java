@@ -3,8 +3,10 @@ package io.socket.socketio.server;
 import io.socket.emitter.Emitter;
 import io.socket.parser.Packet;
 
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Socket.io adapter class for broadcasts.
@@ -34,12 +36,12 @@ public abstract class SocketIoAdapter extends Emitter {
     /**
      * Set of sockets contained within a room.
      */
-    protected final HashMap<String, HashSet<SocketIoSocket>> mRoomSockets = new HashMap<>();
+    protected final Map<String, Set<SocketIoSocket>> mRoomSockets = new ConcurrentHashMap<>();
 
     /**
      * Set of rooms joined by a socket.
      */
-    protected final HashMap<String, HashSet<String>> mSocketRooms = new HashMap<>();
+    protected final Map<String, HashSet<String>> mSocketRooms = new ConcurrentHashMap<>();
 
     protected SocketIoAdapter(SocketIoNamespace namespace) {
         mNamespace = namespace;
