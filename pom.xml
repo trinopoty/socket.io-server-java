@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
     <name>socket.io</name>
     <description>Socket.IO server library for Java</description>
-    <!--<url>https://github.com/socketio/socket.io-server-java</url>-->
+    <url>https://github.com/trinopoty/socket.io-server-java</url>
 
     <modules>
         <module>socket.io-server</module>
@@ -30,12 +30,12 @@
         </license>
     </licenses>
 
-    <!--<scm>
-        <url>https://github.com/socketio/socket.io-server-java</url>
-        <connection>scm:git:https://github.com/socketio/socket.io-server-java.git</connection>
-        <developerConnection>scm:git:https://github.com/socketio/socket.io-server-java.git</developerConnection>
+    <scm>
+        <url>https://github.com/trinopoty/socket.io-server-java</url>
+        <connection>scm:git:https://github.com/trinopoty/socket.io-server-java.git</connection>
+        <developerConnection>scm:git:https://github.com/trinopoty/socket.io-server-java.git</developerConnection>
         <tag>HEAD</tag>
-    </scm>-->
+    </scm>
 
     <developers>
         <developer>
@@ -45,11 +45,7 @@
         </developer>
     </developers>
 
-    <prerequisites>
-        <maven>3.0.4</maven>
-    </prerequisites>
-
-    <!--<distributionManagement>
+    <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
@@ -58,17 +54,50 @@
             <id>ossrh</id>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
-    </distributionManagement>-->
+    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>io.socket</groupId>
                 <artifactId>socket.io-server</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <profiles>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <configuration>
+                                    <keyname>${gpg.keyname}</keyname>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>
