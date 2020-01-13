@@ -40,19 +40,19 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>9.4.10.v20180503</version>
+            <version>9.4.25.v20191220</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
-            <version>9.4.10.v20180503</version>
+            <version>9.4.25.v20191220</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
             <artifactId>websocket-server</artifactId>
-            <version>9.4.10.v20180503</version>
+            <version>9.4.25.v20191220</version>
             <scope>test</scope>
         </dependency>
 
