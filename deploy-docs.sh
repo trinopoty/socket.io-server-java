@@ -12,7 +12,7 @@ JAVADOC_DIR=$(pwd)/target/site/apidocs
 mvn clean javadoc:aggregate
 
 # Activate virtualenv
-virtualenv -p python3 venv
+python3.7 -m venv venv
 . venv/bin/activate
 
 cd docs
