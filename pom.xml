@@ -6,7 +6,7 @@
 
     <groupId>io.socket</groupId>
     <artifactId>socket.io-server-bom</artifactId>
-    <version>0.9.0</version>
+    <version>0.9.1</version>
     <packaging>pom</packaging>
     <name>socket.io</name>
     <description>Socket.IO server library for Java</description>
