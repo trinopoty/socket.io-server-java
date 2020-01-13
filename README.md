@@ -1,5 +1,5 @@
 # Socket.IO Java
-[![Build Status](https://travis-ci.org/socketio/socket.io-server-java.png?branch=master)](https://travis-ci.org/socketio/socket.io-server-java) [![codecov](https://codecov.io/gh/socketio/socket.io-server-java/branch/master/graph/badge.svg)](https://codecov.io/gh/socketio/socket.io-server-java)
+[![Build Status](https://travis-ci.org/trinopoty/socket.io-server-java.png?branch=master)](https://travis-ci.org/trinopoty/socket.io-server-java) [![codecov](https://codecov.io/gh/trinopoty/socket.io-server-java/branch/master/graph/badge.svg)](https://codecov.io/gh/trinopoty/socket.io-server-java)
 
 This is the Socket.IO Server Library for Java ported from the [JavaScript server](https://github.com/socketio/socket.io).
 
