@@ -10,9 +10,19 @@ Socket.IO Java Server Library
 Maven
 -----
 
-This section will be updated when library artifact is available on Maven Central.
+Add the following dependency to your ``pom.xml``.::
+
+    <dependencies>
+      <dependency>
+        <groupId>io.socket</groupId>
+        <artifactId>socket.io-server</artifactId>
+        <version>1.0.0</version>
+      </dependency>
+    </dependencies>
 
 Gradle
 ------
 
-This section will be updated when library artifact is available on Maven Central.
+Add it as a gradle dependency in ``build.gradle``.::
+
+    compile ('io.socket:socket.io-server:1.0.0')
