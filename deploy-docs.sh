@@ -12,8 +12,8 @@ JAVADOC_DIR=$(pwd)/target/site/apidocs
 mvn clean javadoc:aggregate
 
 # Activate virtualenv
-python3.7 -m venv venv
-. venv/bin/activate
+python3 -m venv venv3
+. venv3/bin/activate
 
 cd docs
 rm -rf ./_build
@@ -26,14 +26,14 @@ make html
 
 cd _build
 
-# Configure git
-git config --global push.default simple
-git config user.name "Travis CI"
-git config user.email "travis@travis-ci.org"
-
 # Clone docs branch
 git clone -b gh-pages https://git@$GH_REPO_REF docs-upload
 cd docs-upload
+
+# Configure git
+git config push.default simple
+git config user.name "Travis CI"
+git config user.email "travis@travis-ci.org"
 
 # Remove existing docs
 rm -rf *

@@ -15,14 +15,6 @@ matrix:
     jdk: oraclejdk8
     env: TESTENV=cover FYI="this also builds documentation for tags"
     script: mvn clean cobertura:cobertura
-    addons:
-      apt:
-        packages:
-        - python3.7
-        - python3-pip
-        - python3.7-venv
-        - make
 
 after_success:
 - '[[ "$TESTENV" == "cover" ]] && bash <(curl -s https://codecov.io/bash)'
-- '[[ "$TESTENV" == "cover" ]] && [[ -n "$TRAVIS_TAG" ]] && ./deploy-docs.sh'
