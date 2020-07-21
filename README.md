@@ -22,7 +22,7 @@ Add the following dependency to your `pom.xml`.
   <dependency>
     <groupId>io.socket</groupId>
     <artifactId>socket.io-server</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
   </dependency>
 </dependencies>
 ```
@@ -31,7 +31,7 @@ Add the following dependency to your `pom.xml`.
 Add it as a gradle dependency in `build.gradle`.
 
 ```groovy
-compile ('io.socket:socket.io-server:1.0.0')
+compile ('io.socket:socket.io-server:1.0.1')
 ```
 
 ## License
