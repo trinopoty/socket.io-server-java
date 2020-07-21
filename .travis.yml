@@ -9,10 +9,10 @@ branches:
 matrix:
   include:
   - name: "Java 8 Tests"
-    jdk: oraclejdk8
+    jdk: openjdk8
     script: travis_retry mvn test
   - name: "Coverage"
-    jdk: oraclejdk8
+    jdk: openjdk8
     env: TESTENV=cover FYI="this also builds documentation for tags"
     script: mvn clean cobertura:cobertura
 
