@@ -274,7 +274,7 @@ public final class SocketIoSocket extends Emitter {
             emitArgs[args.length] = (ReceivedByLocalAcknowledgementCallback) args1 -> {
                 final Packet ackPacket = PacketUtils.createDataPacket(Parser.ACK, null, args1);
                 ackPacket.id = packet.id;
-                mClient.sendPacket(ackPacket);
+                sendPacket(ackPacket);
             };
             args = emitArgs;
         }
