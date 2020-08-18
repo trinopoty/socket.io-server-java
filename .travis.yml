@@ -17,4 +17,5 @@ matrix:
     script: mvn clean cobertura:cobertura
 
 after_success:
-- '[[ "$TESTENV" == "cover" ]] && bash <(curl -s https://codecov.io/bash)'
+  - '[[ "$TESTENV" == "cover" ]] && bash <(curl -s https://codecov.io/bash)'
+  - '[[ "$TESTENV" == "cover" ]] && [[ -n "$TRAVIS_TAG" ]] && ./deploy-docs.sh'
