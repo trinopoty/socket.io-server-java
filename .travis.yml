@@ -13,6 +13,8 @@ matrix:
     script: travis_retry mvn test
   - name: "Coverage"
     jdk: openjdk8
+    python:
+      - "3.8"
     env: TESTENV=cover FYI="this also builds documentation for tags"
     script: mvn clean cobertura:cobertura
 
