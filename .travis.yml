@@ -8,7 +8,7 @@ branches:
 
 env:
   global:
-    - secure: SSdy5NKn2n5zB3ZybM7Ma3R8Yq2DtlemsJmJrgiERdfaVJfsjbpbS/8jsf2bKf60B4QlPbFbS/wtlTCkzmQzDyN9eQ9NCtlulb2wCMav4ChYJLZAKmGuciGStemA+kIhDYvxvVYLsPANCaDWDt4UPpnDIpVkp4EFxI2GuNoWlKXhcpUqq4Eu51JeyNsfXjoJl2kyvKguRK8hacWvp1ecqJ/lEa3xhKy98UCMfZuGfMyeT2VAV7jE3RLHR93UWDECUzGsqxhmzXaBwpO5Ejn2V6m1MX1FaAdkRPL2oPPimR1yT05vUjzwSdJ/SLCVwIBCvhUqIAa4dKUbLSEZ1ABlGW9vTCnqFsvleAKL/4nVurjvapZuKAk1MIa3iMTOByQjcvDIuiI8f3+MlsZv7nNA3za/r7eOCOAFrnXNjoqeokBmHxCCJnX8sfSLxUykaNSOScylTVIWlt7ILGFZgalo4LEWce1eS3sNVu1lSQI9WJZh1oZ79Ad1Y64t7rEYVNfs2Mr3RomAP8DsSgCfTKnqPrrVzUJAeI6foULN+yxAyJS6G/b3JpmN0pg+J5dmIf5jEjQTT2YCn7NSygRRu6EhlBJwpRA/UrAOfQmtK/RmByJMtuZJu+f+YAmNW7VorlG+1/dGSNMOvf4A91dipek1gJ6nknadj8HXxbjb3GQg3xQ=
+    - secure: zykjK55fskWbGJGQnG+T7ySSGShSGPnKMTk3hhdmLrV2Ou6oHk8eC1/puDfc97hHfuq1qtJV0cT5PcC8VdrJP+aaDKKuR6wnyroKPqToJbG2sanvSZ1fIICVLT6EB9cn6AFkHIwRMDDwgiDcm28IY8oRmxYt/EBSWRjT/z7pvRMRkf6YMRE/UfiVkop+SvTBAx+Xgr9Et+q5bj8okPHpaZ8aK4wazkxcABIqittQ73ydFwJxEt8KmsouK2yfYGgCpT/idGTn5RsmlVPP9b/Ls37KMWjbZSZgHUq11rrhgrZuVLtCgycu5utOFpuFKHg8vX9Ft804bbb0eW+eQkfBXqTrqasX5jIm5aevqM60x+U+Nc9iDzRS2HkMr1y5VDGdzCp0EVASaop4qy17ciE+lLr+aWnrqjnZy9Cxppnf/bg/BO3596MlSheQwMmlvocxXCcKvMZQa92f4yN4OV79jYAayXVFtVkhDuv/1eeJxzU8w93T+LOeOEc4DNLONOBNgFJ57mICMt2+fVx3Hnq4R8PsK5G39eHh8qUTN4Z8ZHnqE2CPBz3MWkPkv8OOTUFGlkYU6pp6gNQw0UqNzYJc8YMinxMT0APh2nR3aNpRvLzoq7B04IpNj4tUgnkA2gChssWH36ekK/qmhr9FRHpdgIek4tXlBD5lMLocY4WexnI=
 
 addons:
   apt:
@@ -23,11 +23,11 @@ matrix:
     jdk: openjdk8
     python:
       - "3.8"
-    apt_packages:
-      - python3-venv
+    before_install:
+      - sudo apt-get install python3-venv
     env: TESTENV=cover FYI="this also builds documentation for tags"
     script: mvn clean cobertura:cobertura
 
 after_success:
   - '[[ "$TESTENV" == "cover" ]] && bash <(curl -s https://codecov.io/bash)'
-  - '[[ "$TESTENV" == "cover" ]] && ./deploy-docs.sh'
+  - '[[ "$TESTENV" == "cover" ]] && [[ -n "$TRAVIS_TAG" ]] && ./deploy-docs.sh'
