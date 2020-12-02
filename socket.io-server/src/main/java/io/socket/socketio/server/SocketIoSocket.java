@@ -121,7 +121,7 @@ public final class SocketIoSocket extends Emitter {
             if (close) {
                 mClient.disconnect();
             } else {
-                final Packet packet = new Packet();
+                final Packet<?> packet = new Packet<>();
                 packet.type = Parser.DISCONNECT;
                 sendPacket(packet);
 
@@ -157,7 +157,7 @@ public final class SocketIoSocket extends Emitter {
             throw new IllegalArgumentException("event cannot be null.");
         }
 
-        final Packet packet = PacketUtils.createDataPacket(Parser.EVENT, event, args);
+        final Packet<?> packet = PacketUtils.createDataPacket(Parser.EVENT, event, args);
         mAdapter.broadcast(packet, rooms, new String[] { getId() });
     }
 
@@ -185,14 +185,14 @@ public final class SocketIoSocket extends Emitter {
             throw new IllegalArgumentException("event cannot be null.");
         }
 
-        final Packet packet = PacketUtils.createDataPacket(Parser.EVENT, event, args);
+        final Packet<?> packet = PacketUtils.createDataPacket(Parser.EVENT, event, args);
 
         if (acknowledgementCallback != null) {
             packet.id = mNamespace.nextId();
             mAcknowledgementCallbacks.put(packet.id, acknowledgementCallback);
         }
 
-        mClient.sendPacket(packet);
+        sendPacket(packet);
     }
 
     /**
@@ -265,14 +265,14 @@ public final class SocketIoSocket extends Emitter {
         mAllEventListeners.remove(listener);
     }
 
-    void onEvent(final Packet packet) {
+    void onEvent(final Packet<?> packet) {
         Object[] args = (packet.data != null)? unpackEventData((JSONArray)packet.data) : EMPTY_ARGS;
 
         if (packet.id >= 0) {
             final Object[] emitArgs = new Object[args.length + 1];
             System.arraycopy(args, 0, emitArgs, 0, args.length);
             emitArgs[args.length] = (ReceivedByLocalAcknowledgementCallback) args1 -> {
-                final Packet ackPacket = PacketUtils.createDataPacket(Parser.ACK, null, args1);
+                final Packet<?> ackPacket = PacketUtils.createDataPacket(Parser.ACK, null, args1);
                 ackPacket.id = packet.id;
                 sendPacket(ackPacket);
             };
@@ -289,7 +289,7 @@ public final class SocketIoSocket extends Emitter {
         }
     }
 
-    void onAck(Packet packet) {
+    void onAck(Packet<?> packet) {
         if (mAcknowledgementCallbacks.containsKey(packet.id)) {
             ReceivedByRemoteAcknowledgementCallback acknowledgement = mAcknowledgementCallbacks.get(packet.id);
             mAcknowledgementCallbacks.remove(packet.id);
@@ -299,7 +299,7 @@ public final class SocketIoSocket extends Emitter {
         }
     }
 
-    void onPacket(Packet packet) {
+    void onPacket(Packet<?> packet) {
         switch (packet.type) {
             case Parser.EVENT:
             case Parser.BINARY_EVENT:
@@ -322,7 +322,7 @@ public final class SocketIoSocket extends Emitter {
         mNamespace.addConnected(this);
         joinRoom(getId());
 
-        sendPacket(new Packet(Parser.CONNECT));
+        sendPacket(new Packet<>(Parser.CONNECT));
     }
 
     void onDisconnect() {
@@ -349,7 +349,7 @@ public final class SocketIoSocket extends Emitter {
         }
     }
 
-    void sendPacket(Packet packet) {
+    void sendPacket(Packet<?> packet) {
         packet.nsp = mNamespace.getName();
         mClient.sendPacket(packet);
     }
