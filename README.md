@@ -3,6 +3,8 @@
 
 This is the Socket.IO Server Library for Java ported from the [JavaScript server](https://github.com/socketio/socket.io).
 
+**NOTE** This library will follow the major version of the JS library starting with version 3.
+
 See also: [Socket.IO-client Java](https://github.com/socketio/socket.io-client-java)
 
 ## Features
@@ -22,7 +24,7 @@ Add the following dependency to your `pom.xml`.
   <dependency>
     <groupId>io.socket</groupId>
     <artifactId>socket.io-server</artifactId>
-    <version>1.0.3</version>
+    <version>3.0.0</version>
   </dependency>
 </dependencies>
 ```
@@ -31,7 +33,7 @@ Add the following dependency to your `pom.xml`.
 Add it as a gradle dependency in `build.gradle`.
 
 ```groovy
-compile ('io.socket:socket.io-server:1.0.3')
+compile ('io.socket:socket.io-server:3.0.0')
 ```
 
 ## License
