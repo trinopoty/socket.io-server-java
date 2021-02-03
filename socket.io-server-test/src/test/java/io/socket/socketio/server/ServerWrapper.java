@@ -24,10 +24,10 @@ final class ServerWrapper {
 
     private static final AtomicInteger PORT_START = new AtomicInteger(3000);
 
-    private int mPort;
-    private Server mServer;
-    private EngineIoServer mEngineIoServer;
-    private SocketIoServer mSocketIoServer;
+    private final int mPort;
+    private final Server mServer;
+    private final EngineIoServer mEngineIoServer;
+    private final SocketIoServer mSocketIoServer;
 
     static {
         Log.setLog(new JettyNoLogging());
