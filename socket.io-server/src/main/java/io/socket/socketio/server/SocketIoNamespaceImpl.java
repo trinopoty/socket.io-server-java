@@ -50,10 +50,11 @@ final class SocketIoNamespaceImpl extends SocketIoNamespace {
      * Add a client instance to this namespace.
      *
      * @param client Client instance to add.
+     * @param data Data sent with the CONNECT packet.
      * @return Socket instance created from client.
      */
-    synchronized SocketIoSocket add(SocketIoClient client) {
-        final SocketIoSocket socket = new SocketIoSocket(this, client);
+    synchronized SocketIoSocket add(SocketIoClient client, Object data) {
+        final SocketIoSocket socket = new SocketIoSocket(this, client, data);
         if (client.getConnection().getReadyState() == ReadyState.OPEN) {
             mSockets.put(socket.getId(), socket);
             socket.onConnect();

@@ -1,15 +1,17 @@
 package io.socket.socketio.server;
 
-import io.socket.client.Url;
 import io.socket.engineio.server.EngineIoSocket;
 import io.socket.engineio.server.ReadyState;
 import io.socket.parser.IOParser;
 import io.socket.parser.Packet;
 import io.socket.parser.Parser;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Represents connection to one client.
@@ -37,10 +39,23 @@ final class SocketIoClient {
 
     /**
      * Get id of this client.
-     * @return Id of client.
      */
     String getId() {
         return mId;
+    }
+
+    /**
+     * Get the query parameters of underlying engine.io connection.
+     */
+    Map<String, String> getInitialQuery() {
+        return mConnection.getInitialQuery();
+    }
+
+    /**
+     * Get the headers of the underlying engine.io connection.
+     */
+    Map<String, List<String>> getInitialHeaders() {
+        return mConnection.getInitialHeaders();
     }
 
     /**
@@ -48,13 +63,13 @@ final class SocketIoClient {
      *
      * @param packet Packet to send.
      */
-    void sendPacket(final Packet packet) {
+    void sendPacket(final Packet<?> packet) {
         if (mConnection.getReadyState() == ReadyState.OPEN) {
             mEncoder.encode(packet, objects -> {
                 // TODO: Check for volatile flag
 
                 for (Object item : objects) {
-                    final io.socket.engineio.parser.Packet engineIoPacket = new io.socket.engineio.parser.Packet(io.socket.engineio.parser.Packet.MESSAGE);
+                    final io.socket.engineio.parser.Packet<Object> engineIoPacket = new io.socket.engineio.parser.Packet<>(io.socket.engineio.parser.Packet.MESSAGE);
                     engineIoPacket.data = item;
                     mConnection.send(engineIoPacket);
                 }
@@ -67,13 +82,19 @@ final class SocketIoClient {
      *
      * @param namespace Namespace to connect to.
      */
-    void connect(String namespace) {
+    void connect(String namespace, Object data) {
         if (mServer.hasNamespace(namespace) || mServer.checkNamespace(namespace)) {
-            doConnect(namespace);
+            doConnect(namespace, data);
         } else {
-            final Packet<String> packet = new Packet<>(Parser.ERROR);
+            final JSONObject errorData = new JSONObject();
+            try {
+                errorData.put("message", "Invalid namespace");
+            } catch (JSONException ignore) {
+            }
+
+            final Packet<Object> packet = new Packet<>(Parser.CONNECT_ERROR);
             packet.nsp = namespace;
-            packet.data = "Invalid namespace";
+            packet.data = errorData;
 
             sendPacket(packet);
         }
@@ -125,12 +146,7 @@ final class SocketIoClient {
     private void setup() {
         mDecoder.onDecoded(packet -> {
             if (packet.type == IOParser.CONNECT) {
-                try {
-                    connect(Url.parse(packet.nsp).getPath());
-                } catch (URISyntaxException ex) {
-                    // TODO: Fix this later
-                    throw new RuntimeException(ex);
-                }
+                connect(packet.nsp, packet.data);
             } else {
                 final SocketIoSocket socket = mNamespaceSockets.get(packet.nsp);
                 if (socket != null) {
@@ -152,6 +168,12 @@ final class SocketIoClient {
         });
         mConnection.on("error", args -> onError((String) args[0]));
         mConnection.on("close", args -> onClose((String) args[0]));
+
+        mServer.getScheduledExecutor().schedule(() -> {
+            if (mNamespaceSockets.isEmpty()) {
+                close();
+            }
+        }, mServer.getOptions().getConnectionTimeout(), TimeUnit.MILLISECONDS);
     }
 
     private void destroy() {
@@ -160,9 +182,9 @@ final class SocketIoClient {
         mConnection.off("close");
     }
 
-    private void doConnect(String namespace) {
+    private void doConnect(String namespace, Object data) {
         final SocketIoNamespaceImpl nsp = (SocketIoNamespaceImpl)mServer.namespace(namespace);
-        final SocketIoSocket socket = nsp.add(this);
+        final SocketIoSocket socket = nsp.add(this, data);
         mSockets.put(socket.getId(), socket);
         mNamespaceSockets.put(namespace, socket);
     }

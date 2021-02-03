@@ -18,10 +18,12 @@ public final class SocketIoServerOptions {
 
     static {
         DEFAULT.setAdapterFactory(MEMORY_ADAPTER_FACTORY);
+        DEFAULT.setConnectionTimeout(45000);
         DEFAULT.lock();
     }
 
     private boolean mIsLocked;
+    private long mConnectionTimeout;
     private SocketIoAdapter.AdapterFactory mAdapterFactory;
 
     private SocketIoServerOptions() {
@@ -36,13 +38,27 @@ public final class SocketIoServerOptions {
      */
     public static SocketIoServerOptions newFromDefault() {
         return (new SocketIoServerOptions())
+                .setConnectionTimeout(DEFAULT.getConnectionTimeout())
                 .setAdapterFactory(DEFAULT.getAdapterFactory());
     }
 
     /**
+     * Gets the amount of time to wait (ms) before a client without namespace is closed.
+     */
+    public long getConnectionTimeout() {
+        return mConnectionTimeout;
+    }
+
+    /**
+     * Sets the amount of time to wait (ms) before a client without namespace is closed.
+     */
+    public SocketIoServerOptions setConnectionTimeout(long connectionTimeout) {
+        mConnectionTimeout = connectionTimeout;
+        return this;
+    }
+
+    /**
      * Gets the adapter factory instance.
-     *
-     * @return Adapter factory object.
      */
     public SocketIoAdapter.AdapterFactory getAdapterFactory() {
         return mAdapterFactory;

@@ -7,6 +7,7 @@ import io.socket.parser.Parser;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.regex.Pattern;
 
 /**
@@ -21,6 +22,7 @@ public final class SocketIoServer {
     private final Map<SocketIoNamespaceProvider, SocketIoNamespaceGroupImpl> mNamespaceGroups = new ConcurrentHashMap<>();
     private final Map<String, SocketIoNamespaceImpl> mNamespaces = new ConcurrentHashMap<>();
     private final Parser.Encoder mEncoder = new IOParser.Encoder();
+    private final ScheduledExecutorService mScheduledExecutor;
 
     /**
      * Create instance of server with default options.
@@ -40,14 +42,22 @@ public final class SocketIoServer {
     public SocketIoServer(EngineIoServer server, SocketIoServerOptions options) {
         mOptions = options;
         mOptions.lock();
+        mScheduledExecutor = server.getScheduledExecutor();
 
         namespace("/");
 
         server.on("connection", args -> {
             final EngineIoSocket socket = (EngineIoSocket) args[0];
-            final SocketIoClient client = new SocketIoClient(SocketIoServer.this, socket);
-            client.connect("/");
+            new SocketIoClient(SocketIoServer.this, socket);
         });
+    }
+
+    SocketIoServerOptions getOptions() {
+        return mOptions;
+    }
+
+    ScheduledExecutorService getScheduledExecutor() {
+        return mScheduledExecutor;
     }
 
     /**

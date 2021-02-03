@@ -3,13 +3,12 @@ package io.socket.socketio.server;
 import io.socket.emitter.Emitter;
 import io.socket.parser.Packet;
 import io.socket.parser.Parser;
+import io.socket.yeast.ServerYeast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -67,17 +66,19 @@ public final class SocketIoSocket extends Emitter {
     private final SocketIoClient mClient;
     private final SocketIoAdapter mAdapter;
     private final String mId;
+    private final Object mConnectData;
 
     private final HashSet<String> mRooms = new HashSet<>();
     private final HashMap<Integer, ReceivedByRemoteAcknowledgementCallback> mAcknowledgementCallbacks = new HashMap<>();
 
     private boolean mConnected;
 
-    SocketIoSocket(SocketIoNamespaceImpl namespace, SocketIoClient client) {
+    SocketIoSocket(SocketIoNamespaceImpl namespace, SocketIoClient client, Object connectData) {
         mNamespace = namespace;
         mClient = client;
         mAdapter = namespace.getAdapter();
-        mId = (mNamespace.getName().equals("/"))? client.getId() : (mNamespace.getName() + "#" + client.getId());
+        mId = ServerYeast.yeast();
+        mConnectData = connectData;
 
         mConnected = true;
     }
@@ -94,8 +95,6 @@ public final class SocketIoSocket extends Emitter {
 
     /**
      * Gets the id of this socket.
-     *
-     * @return Socket id string.
      */
     public String getId() {
         return mId;
@@ -103,11 +102,30 @@ public final class SocketIoSocket extends Emitter {
 
     /**
      * Gets the namespace of this socket.
-     *
-     * @return Socket namespace instance.
      */
     public SocketIoNamespace getNamespace() {
         return mNamespace;
+    }
+
+    /**
+     * Gets the data packet sent while establishing the socket connection.
+     */
+    public Object getConnectData() {
+        return mConnectData;
+    }
+
+    /**
+     * Gets the query parameters of the initial HTTP connection.
+     */
+    public Map<String, String> getInitialQuery() {
+        return mClient.getInitialQuery();
+    }
+
+    /**
+     * Gets the headers of the initial HTTP connection.
+     */
+    public Map<String, List<String>> getInitialHeaders() {
+        return mClient.getInitialHeaders();
     }
 
     /**
@@ -312,7 +330,7 @@ public final class SocketIoSocket extends Emitter {
             case Parser.DISCONNECT:
                 onDisconnect();
                 break;
-            case Parser.ERROR:
+            case Parser.CONNECT_ERROR:
                 onError((String) packet.data);
                 break;
         }
@@ -322,7 +340,12 @@ public final class SocketIoSocket extends Emitter {
         mNamespace.addConnected(this);
         joinRoom(getId());
 
-        sendPacket(new Packet<>(Parser.CONNECT));
+        final JSONObject data = new JSONObject();
+        try {
+            data.put("sid", getId());
+        } catch (JSONException ignore) {
+        }
+        sendPacket(new Packet<>(Parser.CONNECT, data));
     }
 
     void onDisconnect() {

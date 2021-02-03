@@ -2,13 +2,10 @@ package io.socket.socketio.server;
 
 import io.socket.emitter.Emitter;
 import io.socket.engineio.server.EngineIoServer;
-import io.socket.engineio.server.EngineIoWebSocket;
 import io.socket.parser.IOParser;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
@@ -90,24 +87,9 @@ public final class SocketIoServerTest {
         namespace.on("connect", connectionListener);
         namespace.on("connection", connectionListener);
 
-        engineIoServer.handleWebSocket(new EngineIoWebSocket() {
-            @Override
-            public Map<String, String> getQuery() {
-                return new HashMap<>();
-            }
-
-            @Override
-            public void write(String message) {
-            }
-
-            @Override
-            public void write(byte[] message) {
-            }
-
-            @Override
-            public void close() {
-            }
-        });
+        final StubEngineIoWebSocket webSocket = new StubEngineIoWebSocket();
+        engineIoServer.handleWebSocket(webSocket);
+        webSocket.emitConnect(null);
 
         Mockito.verify(connectionListener, Mockito.times(2))
                 .call(Mockito.any(SocketIoSocket.class));
@@ -132,25 +114,9 @@ public final class SocketIoServerTest {
         }).when(connectionListener).call(Mockito.any());
         namespace.on("connect", connectionListener);
 
-        final EngineIoWebSocket webSocket = new EngineIoWebSocket() {
-            @Override
-            public Map<String, String> getQuery() {
-                return new HashMap<>();
-            }
-
-            @Override
-            public void write(String message) {
-            }
-
-            @Override
-            public void write(byte[] message) {
-            }
-
-            @Override
-            public void close() {
-            }
-        };
+        final StubEngineIoWebSocket webSocket = new StubEngineIoWebSocket();
         engineIoServer.handleWebSocket(webSocket);
+        webSocket.emitConnect(null);
 
         Mockito.verify(connectionListener, Mockito.times(1))
                 .call(Mockito.any(SocketIoSocket.class));

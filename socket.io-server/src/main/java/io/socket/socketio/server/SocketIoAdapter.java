@@ -55,7 +55,7 @@ public abstract class SocketIoAdapter extends Emitter {
      * @param rooms List of rooms to restrict packet to or null to send to all rooms.
      * @throws IllegalArgumentException If packet is null.
      */
-    public void broadcast(Packet packet, String[] rooms) throws IllegalArgumentException {
+    public void broadcast(Packet<?> packet, String[] rooms) throws IllegalArgumentException {
         broadcast(packet, rooms, null);
     }
 
@@ -68,7 +68,7 @@ public abstract class SocketIoAdapter extends Emitter {
      * @param socketsExcluded List of sockets to exclude from sending or null.
      * @throws IllegalArgumentException If packet is null.
      */
-    public abstract void broadcast(Packet packet, String[] rooms, String[] socketsExcluded) throws IllegalArgumentException;
+    public abstract void broadcast(Packet<?> packet, String[] rooms, String[] socketsExcluded) throws IllegalArgumentException;
 
     /**
      * Add a socket to the specified room.

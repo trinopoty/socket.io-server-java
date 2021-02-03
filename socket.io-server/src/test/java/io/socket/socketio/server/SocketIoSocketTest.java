@@ -3,7 +3,6 @@ package io.socket.socketio.server;
 import io.socket.emitter.Emitter;
 import io.socket.engineio.server.EngineIoServer;
 import io.socket.engineio.server.EngineIoSocket;
-import io.socket.engineio.server.EngineIoWebSocket;
 import io.socket.parser.Packet;
 import io.socket.parser.Parser;
 import org.json.JSONArray;
@@ -51,8 +50,9 @@ public final class SocketIoSocketTest {
         }).when(connectionListener).call(Mockito.any());
         namespace.on("connection", connectionListener);
 
-        final EngineIoWebSocketImpl webSocket = new EngineIoWebSocketImpl();
+        final StubEngineIoWebSocket webSocket = new StubEngineIoWebSocket();
         engineIoServer.handleWebSocket(webSocket);
+        webSocket.emitConnect(null);
 
         Mockito.verify(connectionListener, Mockito.times(1))
                 .call(Mockito.any(SocketIoSocket.class));
@@ -84,8 +84,9 @@ public final class SocketIoSocketTest {
         }).when(connectionListener).call(Mockito.any());
         namespace.on("connection", connectionListener);
 
-        final EngineIoWebSocketImpl webSocket = new EngineIoWebSocketImpl();
+        final StubEngineIoWebSocket webSocket = new StubEngineIoWebSocket();
         engineIoServer.handleWebSocket(webSocket);
+        webSocket.emitConnect(null);
 
         Mockito.verify(connectionListener, Mockito.times(1))
                 .call(Mockito.any(SocketIoSocket.class));
@@ -119,8 +120,9 @@ public final class SocketIoSocketTest {
         }).when(connectionListener).call(Mockito.any());
         namespace.on("connection", connectionListener);
 
-        final EngineIoWebSocketImpl webSocket = new EngineIoWebSocketImpl();
+        final StubEngineIoWebSocket webSocket = new StubEngineIoWebSocket();
         engineIoServer.handleWebSocket(webSocket);
+        webSocket.emitConnect(null);
 
         Mockito.verify(connectionListener, Mockito.times(1))
                 .call(Mockito.any(SocketIoSocket.class));
@@ -163,8 +165,9 @@ public final class SocketIoSocketTest {
         }).when(connectionListener).call(Mockito.any());
         namespace.on("connection", connectionListener);
 
-        final EngineIoWebSocketImpl webSocket = new EngineIoWebSocketImpl();
+        final StubEngineIoWebSocket webSocket = new StubEngineIoWebSocket();
         engineIoServer.handleWebSocket(webSocket);
+        webSocket.emitConnect(null);
 
         Mockito.verify(connectionListener, Mockito.times(1))
                 .call(Mockito.any(SocketIoSocket.class));
@@ -202,8 +205,9 @@ public final class SocketIoSocketTest {
         }).when(connectionListener).call(Mockito.any());
         namespace.on("connection", connectionListener);
 
-        final EngineIoWebSocketImpl webSocket = new EngineIoWebSocketImpl();
+        final StubEngineIoWebSocket webSocket = new StubEngineIoWebSocket();
         engineIoServer.handleWebSocket(webSocket);
+        webSocket.emitConnect(null);
 
         Mockito.verify(connectionListener, Mockito.times(1))
                 .call(Mockito.any(SocketIoSocket.class));
@@ -236,8 +240,9 @@ public final class SocketIoSocketTest {
         }).when(connectionListener).call(Mockito.any());
         namespace.on("connection", connectionListener);
 
-        final EngineIoWebSocketImpl webSocket = new EngineIoWebSocketImpl();
+        final StubEngineIoWebSocket webSocket = new StubEngineIoWebSocket();
         engineIoServer.handleWebSocket(webSocket);
+        webSocket.emitConnect(null);
 
         Mockito.verify(connectionListener, Mockito.times(1))
                 .call(Mockito.any(SocketIoSocket.class));
@@ -249,16 +254,14 @@ public final class SocketIoSocketTest {
         final SocketIoServer server = new SocketIoServer(engineIoServer);
         final SocketIoNamespaceImpl namespace = (SocketIoNamespaceImpl)server.namespace("/");
 
-        final EngineIoWebSocket webSocket = Mockito.spy(new EngineIoWebSocketImpl());
-
         final Emitter.Listener connectionListener = Mockito.mock(Emitter.Listener.class);
         Mockito.doAnswer(invocation -> {
             final Object[] args = invocation.getArguments();
             final SocketIoClient client = Mockito.spy(new SocketIoClient(server, (EngineIoSocket) args[0]));
-            final SocketIoSocket socket = new SocketIoSocket(namespace, client);
+            final SocketIoSocket socket = new SocketIoSocket(namespace, client, null);
 
             Mockito.doAnswer(invocationOnMock -> {
-                final Packet packet = invocationOnMock.getArgument(0);
+                final Packet<?> packet = invocationOnMock.getArgument(0);
                 assertNotNull(packet);
 
                 assertEquals(Parser.EVENT, packet.type);
@@ -276,7 +279,10 @@ public final class SocketIoSocketTest {
             return null;
         }).when(connectionListener).call(Mockito.any());
         engineIoServer.on("connection", connectionListener);
+
+        final StubEngineIoWebSocket webSocket = new StubEngineIoWebSocket();
         engineIoServer.handleWebSocket(webSocket);
+        webSocket.emitConnect(null);
 
         Mockito.verify(connectionListener, Mockito.times(1))
                 .call(Mockito.any(EngineIoSocket.class));
@@ -288,16 +294,14 @@ public final class SocketIoSocketTest {
         final SocketIoServer server = new SocketIoServer(engineIoServer);
         final SocketIoNamespaceImpl namespace = (SocketIoNamespaceImpl)server.namespace("/");
 
-        final EngineIoWebSocket webSocket = Mockito.spy(new EngineIoWebSocketImpl());
-
         final Emitter.Listener connectionListener = Mockito.mock(Emitter.Listener.class);
         Mockito.doAnswer(invocation -> {
             final Object[] args = invocation.getArguments();
             final SocketIoClient client = Mockito.spy(new SocketIoClient(server, (EngineIoSocket) args[0]));
-            final SocketIoSocket socket = new SocketIoSocket(namespace, client);
+            final SocketIoSocket socket = new SocketIoSocket(namespace, client, null);
 
             Mockito.doAnswer(invocationOnMock -> {
-                final Packet packet = invocationOnMock.getArgument(0);
+                final Packet<?> packet = invocationOnMock.getArgument(0);
                 assertNotNull(packet);
 
                 assertEquals(Parser.EVENT, packet.type);
@@ -316,7 +320,10 @@ public final class SocketIoSocketTest {
             return null;
         }).when(connectionListener).call(Mockito.any());
         engineIoServer.on("connection", connectionListener);
+
+        final StubEngineIoWebSocket webSocket = new StubEngineIoWebSocket();
         engineIoServer.handleWebSocket(webSocket);
+        webSocket.emitConnect(null);
 
         Mockito.verify(connectionListener, Mockito.times(1))
                 .call(Mockito.any(EngineIoSocket.class));
@@ -328,13 +335,11 @@ public final class SocketIoSocketTest {
         final SocketIoServer server = new SocketIoServer(engineIoServer);
         final SocketIoNamespaceImpl namespace = (SocketIoNamespaceImpl)server.namespace("/");
 
-        final EngineIoWebSocket webSocket = Mockito.spy(new EngineIoWebSocketImpl());
-
         final Emitter.Listener connectionListener = Mockito.mock(Emitter.Listener.class);
         Mockito.doAnswer(invocation -> {
             final Object[] args = invocation.getArguments();
             final SocketIoClient client = Mockito.spy(new SocketIoClient(server, (EngineIoSocket) args[0]));
-            final SocketIoSocket socket = new SocketIoSocket(namespace, client);
+            final SocketIoSocket socket = new SocketIoSocket(namespace, client, null);
 
             socket.disconnect(true);
             Mockito.verify(client, Mockito.times(1))
@@ -342,7 +347,10 @@ public final class SocketIoSocketTest {
             return null;
         }).when(connectionListener).call(Mockito.any());
         engineIoServer.on("connection", connectionListener);
+
+        final StubEngineIoWebSocket webSocket = new StubEngineIoWebSocket();
         engineIoServer.handleWebSocket(webSocket);
+        webSocket.emitConnect(null);
 
         Mockito.verify(connectionListener, Mockito.times(1))
                 .call(Mockito.any(EngineIoSocket.class));
@@ -354,16 +362,14 @@ public final class SocketIoSocketTest {
         final SocketIoServer server = new SocketIoServer(engineIoServer);
         final SocketIoNamespaceImpl namespace = (SocketIoNamespaceImpl)server.namespace("/");
 
-        final EngineIoWebSocket webSocket = Mockito.spy(new EngineIoWebSocketImpl());
-
         final Emitter.Listener connectionListener = Mockito.mock(Emitter.Listener.class);
         Mockito.doAnswer(invocation -> {
             final Object[] args = invocation.getArguments();
             final SocketIoClient client = Mockito.spy(new SocketIoClient(server, (EngineIoSocket) args[0]));
-            final SocketIoSocket socket = new SocketIoSocket(namespace, client);
+            final SocketIoSocket socket = new SocketIoSocket(namespace, client, null);
 
             Mockito.doAnswer(invocationOnMock -> {
-                final Packet packet = invocationOnMock.getArgument(0);
+                final Packet<?> packet = invocationOnMock.getArgument(0);
 
                 assertNotNull(packet);
                 assertEquals(Parser.DISCONNECT, packet.type);
@@ -377,7 +383,10 @@ public final class SocketIoSocketTest {
             return null;
         }).when(connectionListener).call(Mockito.any());
         engineIoServer.on("connection", connectionListener);
+
+        final StubEngineIoWebSocket webSocket = new StubEngineIoWebSocket();
         engineIoServer.handleWebSocket(webSocket);
+        webSocket.emitConnect(null);
 
         Mockito.verify(connectionListener, Mockito.times(1))
                 .call(Mockito.any(EngineIoSocket.class));
@@ -389,16 +398,14 @@ public final class SocketIoSocketTest {
         final SocketIoServer server = new SocketIoServer(engineIoServer);
         final SocketIoNamespaceImpl namespace = (SocketIoNamespaceImpl)server.namespace("/");
 
-        final EngineIoWebSocket webSocket = Mockito.spy(new EngineIoWebSocketImpl());
-
         final Emitter.Listener connectionListener = Mockito.mock(Emitter.Listener.class);
         Mockito.doAnswer(invocation -> {
             final Object[] args = invocation.getArguments();
             final SocketIoClient client = Mockito.spy(new SocketIoClient(server, (EngineIoSocket) args[0]));
-            final SocketIoSocket socket = new SocketIoSocket(namespace, client);
+            final SocketIoSocket socket = new SocketIoSocket(namespace, client, null);
 
             Mockito.doAnswer(invocationOnMock -> {
-                final Packet packet = invocationOnMock.getArgument(0);
+                final Packet<?> packet = invocationOnMock.getArgument(0);
 
                 assertNotNull(packet);
                 assertEquals("/", packet.nsp);
@@ -406,14 +413,17 @@ public final class SocketIoSocketTest {
                 return null;
             }).when(client).sendPacket(Mockito.any(Packet.class));
 
-            socket.sendPacket(new Packet(Parser.CONNECT));
+            socket.sendPacket(new Packet<>(Parser.CONNECT));
 
             Mockito.verify(client, Mockito.times(1))
                     .sendPacket(Mockito.any(Packet.class));
             return null;
         }).when(connectionListener).call(Mockito.any());
         engineIoServer.on("connection", connectionListener);
+
+        final StubEngineIoWebSocket webSocket = new StubEngineIoWebSocket();
         engineIoServer.handleWebSocket(webSocket);
+        webSocket.emitConnect(null);
 
         Mockito.verify(connectionListener, Mockito.times(1))
                 .call(Mockito.any(EngineIoSocket.class));
@@ -432,14 +442,14 @@ public final class SocketIoSocketTest {
             final SocketIoClient client = Mockito.spy(new SocketIoClient(server, engineIoSocket));
 
             Mockito.doAnswer(invocationOnMock -> {
-                final Packet packet = invocationOnMock.getArgument(0);
+                final Packet<?> packet = invocationOnMock.getArgument(0);
                 assertNotNull(packet);
                 assertEquals(namespace.getName(), packet.nsp);
 
                 return null;
             }).when(client).sendPacket(Mockito.any(Packet.class));
 
-            final SocketIoSocket socket = new SocketIoSocket(namespace, client);
+            final SocketIoSocket socket = new SocketIoSocket(namespace, client, null);
             socket.onConnect();
 
             Mockito.verify(client, Mockito.times(1))
@@ -448,8 +458,9 @@ public final class SocketIoSocketTest {
         }).when(connectionListener).call(Mockito.any());
         engineIoServer.on("connection", connectionListener);
 
-        final EngineIoWebSocketImpl webSocket = new EngineIoWebSocketImpl();
+        final StubEngineIoWebSocket webSocket = new StubEngineIoWebSocket();
         engineIoServer.handleWebSocket(webSocket);
+        webSocket.emitConnect(null);
 
         Mockito.verify(connectionListener, Mockito.times(1))
                 .call(Mockito.any(EngineIoSocket.class));
@@ -482,8 +493,9 @@ public final class SocketIoSocketTest {
         }).when(connectionListener).call(Mockito.any());
         namespace.on("connection", connectionListener);
 
-        final EngineIoWebSocketImpl webSocket = new EngineIoWebSocketImpl();
+        final StubEngineIoWebSocket webSocket = new StubEngineIoWebSocket();
         engineIoServer.handleWebSocket(webSocket);
+        webSocket.emitConnect(null);
 
         Mockito.verify(connectionListener, Mockito.times(1))
                 .call(Mockito.any(SocketIoSocket.class));
@@ -516,8 +528,9 @@ public final class SocketIoSocketTest {
         }).when(connectionListener).call(Mockito.any());
         namespace.on("connection", connectionListener);
 
-        final EngineIoWebSocketImpl webSocket = new EngineIoWebSocketImpl();
+        final StubEngineIoWebSocket webSocket = new StubEngineIoWebSocket();
         engineIoServer.handleWebSocket(webSocket);
+        webSocket.emitConnect(null);
 
         Mockito.verify(connectionListener, Mockito.times(1))
                 .call(Mockito.any(SocketIoSocket.class));
@@ -545,8 +558,9 @@ public final class SocketIoSocketTest {
         }).when(connectionListener).call(Mockito.any());
         namespace.on("connection", connectionListener);
 
-        final EngineIoWebSocketImpl webSocket = new EngineIoWebSocketImpl();
+        final StubEngineIoWebSocket webSocket = new StubEngineIoWebSocket();
         engineIoServer.handleWebSocket(webSocket);
+        webSocket.emitConnect(null);
 
         Mockito.verify(connectionListener, Mockito.times(1))
                 .call(Mockito.any(SocketIoSocket.class));
@@ -580,8 +594,9 @@ public final class SocketIoSocketTest {
         }).when(connectionListener).call(Mockito.any());
         namespace.on("connection", connectionListener);
 
-        final EngineIoWebSocketImpl webSocket = new EngineIoWebSocketImpl();
+        final StubEngineIoWebSocket webSocket = new StubEngineIoWebSocket();
         engineIoServer.handleWebSocket(webSocket);
+        webSocket.emitConnect(null);
 
         Mockito.verify(connectionListener, Mockito.times(1))
                 .call(Mockito.any(SocketIoSocket.class));
@@ -607,14 +622,14 @@ public final class SocketIoSocketTest {
             eventPacket.id = namespace.nextId();
 
             Mockito.doAnswer(invocationOnMock -> {
-                final Packet packet = invocationOnMock.getArgument(0);
+                final Packet<?> packet = invocationOnMock.getArgument(0);
                 assertEquals(Parser.ACK, packet.type);
                 assertEquals(eventPacket.id, packet.id);
 
                 return null;
             }).when(client).sendPacket(Mockito.any(Packet.class));
 
-            final SocketIoSocket socket = new SocketIoSocket(namespace, client);
+            final SocketIoSocket socket = new SocketIoSocket(namespace, client, null);
             final Emitter.Listener messageListener = Mockito.mock(Emitter.Listener.class);
             Mockito.doAnswer(invocation1 -> {
                 final Object[] args1 = invocation1.getArguments();
@@ -633,8 +648,9 @@ public final class SocketIoSocketTest {
         }).when(connectionListener).call(Mockito.any());
         engineIoServer.on("connection", connectionListener);
 
-        final EngineIoWebSocketImpl webSocket = new EngineIoWebSocketImpl();
+        final StubEngineIoWebSocket webSocket = new StubEngineIoWebSocket();
         engineIoServer.handleWebSocket(webSocket);
+        webSocket.emitConnect(null);
 
         Mockito.verify(connectionListener, Mockito.times(1))
                 .call(Mockito.any(EngineIoSocket.class));
@@ -685,8 +701,9 @@ public final class SocketIoSocketTest {
         }).when(connectionListener).call(Mockito.any());
         namespace.on("connection", connectionListener);
 
-        final EngineIoWebSocketImpl webSocket = new EngineIoWebSocketImpl();
+        final StubEngineIoWebSocket webSocket = new StubEngineIoWebSocket();
         engineIoServer.handleWebSocket(webSocket);
+        webSocket.emitConnect(null);
 
         Mockito.verify(connectionListener, Mockito.times(1))
                 .call(Mockito.any(SocketIoSocket.class));
@@ -715,7 +732,7 @@ public final class SocketIoSocketTest {
 
             Mockito.reset(client);
             Mockito.doAnswer(invocationOnMock -> {
-                final Packet packet = invocationOnMock.getArgument(0);
+                final Packet<?> packet = invocationOnMock.getArgument(0);
                 if (packet.type == Parser.EVENT) {
                     packetId.id = packet.id;
                 }
@@ -723,7 +740,7 @@ public final class SocketIoSocketTest {
                 return null;
             }).when(client).sendPacket(Mockito.any(Packet.class));
 
-            final SocketIoSocket socket = new SocketIoSocket(namespace, client);
+            final SocketIoSocket socket = new SocketIoSocket(namespace, client, null);
 
             final SocketIoSocket.ReceivedByRemoteAcknowledgementCallback callback = Mockito.mock(SocketIoSocket.ReceivedByRemoteAcknowledgementCallback.class);
             socket.send("foo", null, callback);
@@ -731,7 +748,7 @@ public final class SocketIoSocketTest {
             Mockito.verify(client, Mockito.times(1))
                     .sendPacket(Mockito.any(Packet.class));
 
-            final Packet ackPacket = new Packet(Parser.ACK);
+            final Packet<?> ackPacket = new Packet<>(Parser.ACK);
             ackPacket.id = packetId.id;
 
             socket.onAck(ackPacket);
@@ -742,8 +759,9 @@ public final class SocketIoSocketTest {
         }).when(connectionListener).call(Mockito.any());
         engineIoServer.on("connection", connectionListener);
 
-        final EngineIoWebSocketImpl webSocket = new EngineIoWebSocketImpl();
+        final StubEngineIoWebSocket webSocket = new StubEngineIoWebSocket();
         engineIoServer.handleWebSocket(webSocket);
+        webSocket.emitConnect(null);
 
         Mockito.verify(connectionListener, Mockito.times(1))
                 .call(Mockito.any(EngineIoSocket.class));

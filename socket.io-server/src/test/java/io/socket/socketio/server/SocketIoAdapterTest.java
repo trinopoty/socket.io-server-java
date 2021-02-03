@@ -11,7 +11,7 @@ public final class SocketIoAdapterTest {
     public void test_broadcast() {
         final SocketIoAdapter adapter = Mockito.spy(new SocketIoAdapter(null) {
             @Override
-            public void broadcast(Packet packet, String[] rooms, String[] socketsExcluded) throws IllegalArgumentException {
+            public void broadcast(Packet<?> packet, String[] rooms, String[] socketsExcluded) throws IllegalArgumentException {
             }
 
             @Override
@@ -38,8 +38,8 @@ public final class SocketIoAdapterTest {
                 .when(adapter)
                 .broadcast(Mockito.any(Packet.class), Mockito.any(String[].class), Mockito.any(String[].class));
 
-        adapter.broadcast(new Packet(Parser.CONNECT), null);
+        adapter.broadcast(new Packet<>(Parser.CONNECT), null);
         Mockito.verify(adapter, Mockito.times(1))
-                .broadcast(Mockito.any(Packet.class), Mockito.<String[]>isNull(), Mockito.isNull());
+                .broadcast(Mockito.any(Packet.class), Mockito.isNull(), Mockito.isNull());
     }
 }

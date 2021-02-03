@@ -1,7 +1,7 @@
 {
   "private": true,
   "dependencies": {
-    "socket.io-client": "^2.1.1",
-    "get-stdin": "^6.0.0"
+    "get-stdin": "^6.0.0",
+    "socket.io-client": "^3.1.0"
   }
 }
