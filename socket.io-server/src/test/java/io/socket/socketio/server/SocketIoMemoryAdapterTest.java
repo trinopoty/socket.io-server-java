@@ -2,7 +2,7 @@ package io.socket.socketio.server;
 
 import io.socket.parser.Packet;
 import io.socket.parser.Parser;
-import io.socket.yeast.Yeast;
+import io.socket.yeast.ServerYeast;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -10,7 +10,6 @@ import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
 public final class SocketIoMemoryAdapterTest {
 
     private static final SocketIoMemoryAdapter.AdapterFactory ADAPTER_FACTORY = new SocketIoMemoryAdapter.Factory();
@@ -273,7 +272,7 @@ public final class SocketIoMemoryAdapterTest {
         final SocketIoSocket socket2 = createDummySocket();
         adapter.add(socket2.getId(), socket2);  // Adding to room named as socket id
 
-        final Packet packet = new Packet(Parser.DISCONNECT);
+        final Packet<?> packet = new Packet<>(Parser.DISCONNECT);
 
         connectedSockets.put(socket1.getId(), socket1);
         adapter.broadcast(packet, null, null);
@@ -310,7 +309,7 @@ public final class SocketIoMemoryAdapterTest {
         final SocketIoSocket socket2 = createDummySocket();
         adapter.add(socket2.getId(), socket2);  // Adding to room named as socket id
 
-        final Packet packet = new Packet(Parser.DISCONNECT);
+        final Packet<?> packet = new Packet<>(Parser.DISCONNECT);
 
         connectedSockets.put(socket1.getId(), socket1);
         adapter.broadcast(packet, null, null);
@@ -347,7 +346,7 @@ public final class SocketIoMemoryAdapterTest {
         final SocketIoSocket socket2 = createDummySocket();
         adapter.add(socket2.getId(), socket2);  // Adding to room named as socket id
 
-        final Packet packet = new Packet(Parser.DISCONNECT);
+        final Packet<?> packet = new Packet<>(Parser.DISCONNECT);
 
         connectedSockets.put(socket1.getId(), socket1);
         connectedSockets.put(socket2.getId(), socket2);
@@ -392,7 +391,7 @@ public final class SocketIoMemoryAdapterTest {
         final SocketIoSocket socket2 = createDummySocket();
         adapter.add(socket2.getId(), socket2);  // Adding to room named as socket id
 
-        final Packet packet = new Packet(Parser.DISCONNECT);
+        final Packet<?> packet = new Packet<>(Parser.DISCONNECT);
 
         connectedSockets.put(socket1.getId(), socket1);
         connectedSockets.put(socket2.getId(), socket2);
@@ -428,7 +427,7 @@ public final class SocketIoMemoryAdapterTest {
         final SocketIoSocket socket2 = createDummySocket();
         adapter.add(socket2.getId(), socket2);  // Adding to room named as socket id
 
-        final Packet packet = new Packet(Parser.DISCONNECT);
+        final Packet<?> packet = new Packet<>(Parser.DISCONNECT);
 
         connectedSockets.put(socket1.getId(), socket1);
         connectedSockets.put(socket2.getId(), socket2);
@@ -460,7 +459,7 @@ public final class SocketIoMemoryAdapterTest {
     }
 
     private SocketIoSocket createDummySocket() {
-        final String sid = Yeast.yeast();
+        final String sid = ServerYeast.yeast();
         final SocketIoSocket socket = Mockito.mock(SocketIoSocket.class);
         Mockito.doAnswer(invocationOnMock -> sid).when(socket).getId();
         return socket;

@@ -1,6 +1,5 @@
 package io.socket.socketio.server;
 
-import io.socket.engineio.parser.ServerParser;
 import io.socket.engineio.server.EngineIoWebSocket;
 import io.socket.parser.IOParser;
 import io.socket.parser.Packet;
@@ -43,7 +42,7 @@ public final class StubEngineIoWebSocket extends EngineIoWebSocket {
             final io.socket.engineio.parser.Packet<String> dataPacket = new io.socket.engineio.parser.Packet<>(io.socket.engineio.parser.Packet.MESSAGE);
             dataPacket.data = (String) encodedConnectionPacket[0];
 
-            ServerParser.encodePacket(dataPacket, true, encodedDataPacket -> {
+            io.socket.engineio.parser.Parser.PROTOCOL_V4.encodePacket(dataPacket, true, encodedDataPacket -> {
                 emit("message", encodedDataPacket);
             });
         });

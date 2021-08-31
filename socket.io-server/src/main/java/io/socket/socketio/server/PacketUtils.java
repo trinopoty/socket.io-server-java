@@ -22,7 +22,7 @@ final class PacketUtils {
      * @throws IllegalArgumentException If args contain any invalid data type.
      */
     @SuppressWarnings("SameParameterValue")
-    static Packet createDataPacket(int type, String event, Object[] args) throws IllegalArgumentException {
+    static Packet<?> createDataPacket(int type, String event, Object[] args) throws IllegalArgumentException {
         if (args == null) {
             args = EMPTY_ARGS;
         }
@@ -38,7 +38,7 @@ final class PacketUtils {
             throw new IllegalArgumentException("args contain invalid data type.");
         }
 
-        final Packet packet = new Packet();
+        final Packet<JSONArray> packet = new Packet<>();
         packet.type = type;
         packet.data = array;
         return packet;
@@ -73,7 +73,7 @@ final class PacketUtils {
     @SuppressWarnings("Duplicates")
     private static boolean isPacketDataValid(JSONObject object) {
         try {
-            final Iterator keys = object.keys();
+            final Iterator<?> keys = object.keys();
             while (keys.hasNext()) {
                 final Object keyObj = keys.next();
                 if (!(keyObj instanceof String)) {
