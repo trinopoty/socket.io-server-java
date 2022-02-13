@@ -36,6 +36,9 @@ Add it as a gradle dependency in `build.gradle`.
 compile ('io.socket:socket.io-server:3.0.1')
 ```
 
+## Demo project
+A basic demo project running on a Jetty server can be found at https://github.com/oddmario/socket.io-server-java-demo
+
 ## License
 
 MIT
