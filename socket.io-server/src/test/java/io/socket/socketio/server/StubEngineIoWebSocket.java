@@ -11,9 +11,19 @@ import java.util.Map;
 
 public final class StubEngineIoWebSocket extends EngineIoWebSocket {
 
+    private final Map<String, String> mQuery = new HashMap<>();
+
+    StubEngineIoWebSocket() {
+        this(4);
+    }
+
+    StubEngineIoWebSocket(int version) {
+        mQuery.put("EIO", Integer.toString(version, 10));
+    }
+
     @Override
     public Map<String, String> getQuery() {
-        return new HashMap<>();
+        return mQuery;
     }
 
     @Override
