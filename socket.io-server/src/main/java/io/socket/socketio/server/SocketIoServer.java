@@ -48,7 +48,10 @@ public final class SocketIoServer {
 
         server.on("connection", args -> {
             final EngineIoSocket socket = (EngineIoSocket) args[0];
-            new SocketIoClient(SocketIoServer.this, socket);
+            final SocketIoClient client = new SocketIoClient(SocketIoServer.this, socket);
+            if (socket.getProtocolVersion() == 3) {
+                client.connect("/", null);
+            }
         });
     }
 

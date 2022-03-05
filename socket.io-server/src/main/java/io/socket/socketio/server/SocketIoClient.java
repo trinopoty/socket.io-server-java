@@ -146,7 +146,17 @@ final class SocketIoClient {
     private void setup() {
         mDecoder.onDecoded(packet -> {
             if (packet.type == IOParser.CONNECT) {
-                connect(packet.nsp, packet.data);
+                if (mConnection.getProtocolVersion() == 3) {
+                    String namespace = packet.nsp;
+                    String queryString = null;
+                    if (namespace.contains("?")) {
+                        queryString = namespace.substring(namespace.indexOf('?') + 1);
+                        namespace = namespace.substring(0, namespace.indexOf('?'));
+                    }
+                    connect(namespace, queryString);
+                } else {
+                    connect(packet.nsp, packet.data);
+                }
             } else {
                 final SocketIoSocket socket = mNamespaceSockets.get(packet.nsp);
                 if (socket != null) {

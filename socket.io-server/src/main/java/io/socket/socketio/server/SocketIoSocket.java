@@ -77,8 +77,13 @@ public final class SocketIoSocket extends Emitter {
         mNamespace = namespace;
         mClient = client;
         mAdapter = namespace.getAdapter();
-        mId = ServerYeast.yeast();
         mConnectData = connectData;
+
+        if (client.getConnection().getProtocolVersion() == 3) {
+            mId = namespace.getName().equals("/") ? client.getId() : (namespace.getName() + "#" + client.getId());
+        } else {
+            mId = ServerYeast.yeast();
+        }
 
         mConnected = true;
     }
