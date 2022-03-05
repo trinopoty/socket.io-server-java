@@ -1,8 +1,8 @@
 package io.socket.socketio.server;
 
+import io.socket.engineio.server.utils.ServerYeast;
 import io.socket.socketio.server.parser.Packet;
 import io.socket.socketio.server.parser.Parser;
-import io.socket.yeast.ServerYeast;
 import org.junit.Test;
 import org.mockito.Mockito;
 

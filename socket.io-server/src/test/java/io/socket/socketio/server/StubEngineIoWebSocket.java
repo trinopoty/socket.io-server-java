@@ -39,10 +39,10 @@ public final class StubEngineIoWebSocket extends EngineIoWebSocket {
         connectionPacket.nsp = "/";
         connectionPacket.data = data;
         (new IOParser.Encoder()).encode(connectionPacket, encodedConnectionPacket -> {
-            final io.socket.engineio.parser.Packet<String> dataPacket = new io.socket.engineio.parser.Packet<>(io.socket.engineio.parser.Packet.MESSAGE);
+            final io.socket.engineio.server.parser.Packet<String> dataPacket = new io.socket.engineio.server.parser.Packet<>(io.socket.engineio.server.parser.Packet.MESSAGE);
             dataPacket.data = (String) encodedConnectionPacket[0];
 
-            io.socket.engineio.parser.Parser.PROTOCOL_V4.encodePacket(dataPacket, true, encodedDataPacket -> {
+            io.socket.engineio.server.parser.Parser.PROTOCOL_V4.encodePacket(dataPacket, true, encodedDataPacket -> {
                 emit("message", encodedDataPacket);
             });
         });
