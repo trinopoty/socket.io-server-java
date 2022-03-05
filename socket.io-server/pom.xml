@@ -18,7 +18,7 @@
         <dependency>
             <groupId>io.socket</groupId>
             <artifactId>engine.io-server</artifactId>
-            <version>5.0.1</version>
+            <version>6.0.0</version>
         </dependency>
         <dependency>
             <groupId>javax</groupId>
