@@ -5,7 +5,8 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Getting Started &mdash; Socket.IO Java Server  documentation</title>
@@ -26,6 +27,8 @@
 
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="API" href="api.html" />
@@ -78,7 +81,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
@@ -157,13 +160,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="getting-started">
+  <section id="getting-started">
 <h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
 <p>Create a servlet for handling incoming HTTP connections and call
 <code class="docutils literal notranslate"><span class="pre">EngineIoServer</span></code> class’s <code class="docutils literal notranslate"><span class="pre">handleRequest</span></code> method on receiving an HTTP
 request. Create a new instance of <code class="docutils literal notranslate"><span class="pre">SocketIoServer</span></code> using the <code class="docutils literal notranslate"><span class="pre">EngineIoServer</span></code>
 instance.</p>
-<div class="section" id="example-servlet">
+<section id="example-servlet">
 <h2>Example servlet<a class="headerlink" href="#example-servlet" title="Permalink to this headline">¶</a></h2>
 <p>Example servlet class:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@WebServlet</span><span class="p">(</span><span class="s2">&quot;/socket.io/*&quot;</span><span class="p">)</span>
@@ -181,12 +184,12 @@ instance.</p>
 </div>
 <p>In the example servlet above, a static instance of <code class="docutils literal notranslate"><span class="pre">EngineIoServer</span></code> is defined and
 the method <code class="docutils literal notranslate"><span class="pre">service</span></code> is overridden to call <code class="docutils literal notranslate"><span class="pre">handleRequest</span></code>.</p>
-</div>
-<div class="section" id="accept-websocket-connection">
+</section>
+<section id="accept-websocket-connection">
 <h2>Accept WebSocket Connection<a class="headerlink" href="#accept-websocket-connection" title="Permalink to this headline">¶</a></h2>
 <p>Please refer to <a class="reference external" href="https://socketio.github.io/engine.io-server-java/using.html">Engine.IO documentation</a> for accepting WebSocket connection.</p>
-</div>
-<div class="section" id="create-namesapce">
+</section>
+<section id="create-namesapce">
 <h2>Create namesapce<a class="headerlink" href="#create-namesapce" title="Permalink to this headline">¶</a></h2>
 <p>Call the <code class="docutils literal notranslate"><span class="pre">namespace</span></code> method on <code class="docutils literal notranslate"><span class="pre">SocketIoServer</span></code> to create or retrieve a namespace.</p>
 <p>Example:</p>
@@ -194,8 +197,8 @@ the method <code class="docutils literal notranslate"><span class="pre">service<
 <span class="o">//</span> <span class="n">Do</span> <span class="n">something</span> <span class="k">with</span> <span class="n">namespace</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="listening-for-connections">
+</section>
+<section id="listening-for-connections">
 <h2>Listening for connections<a class="headerlink" href="#listening-for-connections" title="Permalink to this headline">¶</a></h2>
 <p>Attach a listener to the <code class="docutils literal notranslate"><span class="pre">connection</span></code> event of <code class="docutils literal notranslate"><span class="pre">SocketIoNamespace</span></code> to listen for
 new connections.</p>
@@ -209,8 +212,8 @@ new connections.</p>
 <span class="p">});</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="listening-for-message-from-client">
+</section>
+<section id="listening-for-message-from-client">
 <h2>Listening for message from client<a class="headerlink" href="#listening-for-message-from-client" title="Permalink to this headline">¶</a></h2>
 <p>Attach an event listener on <code class="docutils literal notranslate"><span class="pre">SocketIoSocket</span></code> to listen for events from client.</p>
 <p>Example:</p>
@@ -223,8 +226,8 @@ new connections.</p>
 <span class="p">});</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="sending-message-to-client">
+</section>
+<section id="sending-message-to-client">
 <h2>Sending message to client<a class="headerlink" href="#sending-message-to-client" title="Permalink to this headline">¶</a></h2>
 <p>Call the <code class="docutils literal notranslate"><span class="pre">send</span></code> method on <code class="docutils literal notranslate"><span class="pre">SocketIoSocket</span></code> to send event to remote client.</p>
 <p>Example:</p>
@@ -232,8 +235,8 @@ new connections.</p>
 <span class="n">socket</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="s2">&quot;bar arg&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="broadcasting-message-to-room">
+</section>
+<section id="broadcasting-message-to-room">
 <h2>Broadcasting message to room<a class="headerlink" href="#broadcasting-message-to-room" title="Permalink to this headline">¶</a></h2>
 <p>Call the <code class="docutils literal notranslate"><span class="pre">broadcast</span></code> method on <code class="docutils literal notranslate"><span class="pre">SocketIoNamespace</span></code> to broadcast event to
 all remote clients.</p>
@@ -242,8 +245,8 @@ all remote clients.</p>
 <span class="n">namespace</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="s2">&quot;room&quot;</span><span class="p">,</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="s2">&quot;bar arg&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
@@ -295,6 +298,7 @@ all remote clients.</p>
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
+      <script type="text/javascript" src="_static/documentation_options.js"></script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
