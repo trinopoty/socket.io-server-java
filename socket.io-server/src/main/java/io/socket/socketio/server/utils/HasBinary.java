@@ -1,4 +1,4 @@
-package io.socket.hasbinary;
+package io.socket.socketio.server.utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -8,25 +8,19 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class HasBinary {
+public interface HasBinary {
 
-    private static final Logger logger = Logger.getLogger(HasBinary.class.getName());
+    Logger logger = Logger.getLogger(HasBinary.class.getName());
 
-    private HasBinary() {}
+    static boolean hasBinary(Object data) {
+        if (data == null) return false;
 
-    public static boolean hasBinary(Object data) {
-        return _hasBinary(data);
-    }
-
-    private static boolean _hasBinary(Object obj) {
-        if (obj == null) return false;
-
-        if (obj instanceof byte[]) {
+        if (data instanceof byte[]) {
             return true;
         }
 
-        if (obj instanceof JSONArray) {
-            JSONArray _obj = (JSONArray)obj;
+        if (data instanceof JSONArray) {
+            JSONArray _obj = (JSONArray)data;
             int length = _obj.length();
             for (int i = 0; i < length; i++) {
                 Object v;
@@ -36,15 +30,15 @@ public class HasBinary {
                     logger.log(Level.WARNING, "An error occured while retrieving data from JSONArray", e);
                     return false;
                 }
-                if (_hasBinary(v)) {
+                if (hasBinary(v)) {
                     return true;
                 }
             }
-        } else if (obj instanceof JSONObject) {
-            JSONObject _obj = (JSONObject)obj;
-            Iterator keys = _obj.keys();
+        } else if (data instanceof JSONObject) {
+            JSONObject _obj = (JSONObject)data;
+            Iterator<String> keys = _obj.keys();
             while (keys.hasNext()) {
-                String key = (String)keys.next();
+                String key = keys.next();
                 Object v;
                 try {
                     v = _obj.get(key);
@@ -52,7 +46,7 @@ public class HasBinary {
                     logger.log(Level.WARNING, "An error occured while retrieving data from JSONObject", e);
                     return false;
                 }
-                if (_hasBinary(v)) {
+                if (hasBinary(v)) {
                     return true;
                 }
             }

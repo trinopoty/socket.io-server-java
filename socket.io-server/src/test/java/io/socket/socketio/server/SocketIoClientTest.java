@@ -1,11 +1,11 @@
 package io.socket.socketio.server;
 
-import io.socket.emitter.Emitter;
+import io.socket.engineio.server.Emitter;
 import io.socket.engineio.server.EngineIoServer;
 import io.socket.engineio.server.EngineIoSocket;
 import io.socket.engineio.server.EngineIoWebSocket;
-import io.socket.parser.Packet;
-import io.socket.parser.Parser;
+import io.socket.socketio.server.parser.Packet;
+import io.socket.socketio.server.parser.Parser;
 import org.json.JSONArray;
 import org.junit.Test;
 import org.mockito.Mockito;

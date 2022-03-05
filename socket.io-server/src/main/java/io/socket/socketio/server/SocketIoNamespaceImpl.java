@@ -1,8 +1,8 @@
 package io.socket.socketio.server;
 
 import io.socket.engineio.server.ReadyState;
-import io.socket.parser.Packet;
-import io.socket.parser.Parser;
+import io.socket.socketio.server.parser.Packet;
+import io.socket.socketio.server.parser.Parser;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

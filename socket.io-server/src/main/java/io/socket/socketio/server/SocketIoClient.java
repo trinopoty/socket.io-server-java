@@ -2,9 +2,9 @@ package io.socket.socketio.server;
 
 import io.socket.engineio.server.EngineIoSocket;
 import io.socket.engineio.server.ReadyState;
-import io.socket.parser.IOParser;
-import io.socket.parser.Packet;
-import io.socket.parser.Parser;
+import io.socket.socketio.server.parser.IOParser;
+import io.socket.socketio.server.parser.Packet;
+import io.socket.socketio.server.parser.Parser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -69,7 +69,7 @@ final class SocketIoClient {
                 // TODO: Check for volatile flag
 
                 for (Object item : objects) {
-                    final io.socket.engineio.parser.Packet<Object> engineIoPacket = new io.socket.engineio.parser.Packet<>(io.socket.engineio.parser.Packet.MESSAGE);
+                    final io.socket.engineio.server.parser.Packet<Object> engineIoPacket = new io.socket.engineio.server.parser.Packet<>(io.socket.engineio.server.parser.Packet.MESSAGE);
                     engineIoPacket.data = item;
                     mConnection.send(engineIoPacket);
                 }

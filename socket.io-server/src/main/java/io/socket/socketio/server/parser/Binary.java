@@ -1,4 +1,4 @@
-package io.socket.parser;
+package io.socket.socketio.server.parser;
 
 import org.json.JSONArray;
 import org.json.JSONException;

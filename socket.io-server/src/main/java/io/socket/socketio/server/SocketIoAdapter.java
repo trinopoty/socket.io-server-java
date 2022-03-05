@@ -1,7 +1,7 @@
 package io.socket.socketio.server;
 
-import io.socket.emitter.Emitter;
-import io.socket.parser.Packet;
+import io.socket.engineio.server.Emitter;
+import io.socket.socketio.server.parser.Packet;
 
 import java.util.HashSet;
 import java.util.Map;

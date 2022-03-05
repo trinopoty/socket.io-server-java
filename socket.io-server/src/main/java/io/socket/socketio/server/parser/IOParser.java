@@ -1,6 +1,6 @@
-package io.socket.parser;
+package io.socket.socketio.server.parser;
 
-import io.socket.hasbinary.HasBinary;
+import io.socket.socketio.server.utils.HasBinary;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

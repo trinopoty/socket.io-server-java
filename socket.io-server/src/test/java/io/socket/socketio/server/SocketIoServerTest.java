@@ -1,8 +1,8 @@
 package io.socket.socketio.server;
 
-import io.socket.emitter.Emitter;
+import io.socket.engineio.server.Emitter;
 import io.socket.engineio.server.EngineIoServer;
-import io.socket.parser.IOParser;
+import io.socket.socketio.server.parser.IOParser;
 import org.junit.Test;
 import org.mockito.Mockito;
 

@@ -1,6 +1,6 @@
 package io.socket.socketio.server;
 
-import io.socket.parser.Packet;
+import io.socket.socketio.server.parser.Packet;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

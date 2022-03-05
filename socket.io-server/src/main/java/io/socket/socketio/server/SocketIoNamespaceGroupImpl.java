@@ -1,6 +1,6 @@
 package io.socket.socketio.server;
 
-import io.socket.emitter.Emitter;
+import io.socket.engineio.server.Emitter;
 
 import java.util.HashMap;
 import java.util.HashSet;

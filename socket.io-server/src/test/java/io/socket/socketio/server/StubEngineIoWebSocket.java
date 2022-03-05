@@ -1,9 +1,9 @@
 package io.socket.socketio.server;
 
 import io.socket.engineio.server.EngineIoWebSocket;
-import io.socket.parser.IOParser;
-import io.socket.parser.Packet;
-import io.socket.parser.Parser;
+import io.socket.socketio.server.parser.IOParser;
+import io.socket.socketio.server.parser.Packet;
+import io.socket.socketio.server.parser.Parser;
 
 import java.util.HashMap;
 import java.util.List;
