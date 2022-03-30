@@ -28,9 +28,7 @@ final public class IOParser implements Parser {
                 obj.type = obj.type == EVENT ? BINARY_EVENT : BINARY_ACK;
             }
 
-            if (logger.isLoggable(Level.FINE)) {
-                logger.fine(String.format("encoding packet %s", obj));
-            }
+            logger.fine(String.format("encoding packet %s", obj));
 
             if (BINARY_EVENT == obj.type || BINARY_ACK == obj.type) {
                 encodeAsBinary(obj, callback);
@@ -61,9 +59,7 @@ final public class IOParser implements Parser {
                 str.append(obj.data);
             }
 
-            if (logger.isLoggable(Level.FINE)) {
-                logger.fine(String.format("encoded %s as %s", obj, str));
-            }
+            logger.fine(String.format("encoded %s as %s", obj, str));
             return str.toString();
         }
 
@@ -190,9 +186,7 @@ final public class IOParser implements Parser {
                 }
             }
 
-            if (logger.isLoggable(Level.FINE)) {
-                logger.fine(String.format("decoded %s as %s", str, p));
-            }
+            logger.fine(String.format("decoded %s as %s", str, p));
             return p;
         }
 
