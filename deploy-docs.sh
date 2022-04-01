@@ -52,6 +52,7 @@ if [[ -f "index.html" ]]; then
     git add --all
     git commit -m "Deploy code docs to GitHub Pages Travis build"
 
+    export GH_REPO_TOKEN="trinopoty@${GH_TOKEN}"
     git push --force "https://${GH_REPO_TOKEN}@${GH_REPO_REF}" > /dev/null 2>&1
 else
     echo 'ERROR: index.html not found'

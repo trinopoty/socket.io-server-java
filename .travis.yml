@@ -1,14 +1,14 @@
 language: java
-dist: bionic
+dist: xenial
 sudo: false
 
 branches:
   except:
-  - gh-pages
+    - gh-pages
 
 env:
   global:
-    - secure: zykjK55fskWbGJGQnG+T7ySSGShSGPnKMTk3hhdmLrV2Ou6oHk8eC1/puDfc97hHfuq1qtJV0cT5PcC8VdrJP+aaDKKuR6wnyroKPqToJbG2sanvSZ1fIICVLT6EB9cn6AFkHIwRMDDwgiDcm28IY8oRmxYt/EBSWRjT/z7pvRMRkf6YMRE/UfiVkop+SvTBAx+Xgr9Et+q5bj8okPHpaZ8aK4wazkxcABIqittQ73ydFwJxEt8KmsouK2yfYGgCpT/idGTn5RsmlVPP9b/Ls37KMWjbZSZgHUq11rrhgrZuVLtCgycu5utOFpuFKHg8vX9Ft804bbb0eW+eQkfBXqTrqasX5jIm5aevqM60x+U+Nc9iDzRS2HkMr1y5VDGdzCp0EVASaop4qy17ciE+lLr+aWnrqjnZy9Cxppnf/bg/BO3596MlSheQwMmlvocxXCcKvMZQa92f4yN4OV79jYAayXVFtVkhDuv/1eeJxzU8w93T+LOeOEc4DNLONOBNgFJ57mICMt2+fVx3Hnq4R8PsK5G39eHh8qUTN4Z8ZHnqE2CPBz3MWkPkv8OOTUFGlkYU6pp6gNQw0UqNzYJc8YMinxMT0APh2nR3aNpRvLzoq7B04IpNj4tUgnkA2gChssWH36ekK/qmhr9FRHpdgIek4tXlBD5lMLocY4WexnI=
+  - secure: x8A+yQ3K/iN8maKtml5H9arQQxsjc6AgX7IfuwU8AiCxkoZKWZit25OHfVB4N6cTo16+BBF3lTgRBS4SnDhYjGrLbzlfNCyv+RN4BXIGt2p+6Vq2qgkhWP2yOeGbsySibkEG4Fd0UKzOPwkDSy0nXx8h4b9nSfRMLdE1XL6QwmJMVVOpTJxUg5eL948XWcFdqF6TRCFUijNbUoBvnCKHTMh6q9fVTRMNwKeoT0dzXxbDlxV9F82wI1XwkRSYsuuc8zy5jWoxI8kfFaIq0P+tMikYRKkEDaWIX8cQ5Cz1wXOLMuOYHKKwmTtXTw0vvKGowTDj3JO2tnZ4/qWiHSNlJyPK834VHVxN1cCamwIQ9sr72vm5TGoG9rflRCmKemJgLPswAP1KmWTvX6t1UhLCngkscxcKbJxMMgdqCmYWG/rjX8wtUk2QaPcr7d0xswc8Ozqy8MlBmkkghjj1Z9fS5aT/wH+mf59E12DlKZbtimqqrs4a2Tm1QN0u4sLsO1se1VBnW8+abB+z6WrmuIn6H3xj3NULrSm9a6Dgn20ytkDZyyzy0GMRazXr4hzjusS0ifNJ2PWljOSxsuIU8qZAqEh+vsf75+ERJ2hJ654r6NcmiHBxkpmAMcUkhsRinG11wN1n37fAiLGVybglPfDCygJozr9dBIMUk+Q1aa4Y9K4=
 
 addons:
   apt:
@@ -16,18 +16,25 @@ addons:
 
 matrix:
   include:
-  - name: "Java 8 Tests"
-    jdk: openjdk8
-    script: travis_retry mvn test
-  - name: "Coverage"
-    jdk: openjdk8
-    python:
-      - "3.8"
-    before_install:
-      - sudo apt-get install python3-venv
-    env: TESTENV=cover FYI="this also builds documentation for tags"
-    script: mvn clean cobertura:cobertura
+    - name: "Java 8 Tests"
+      jdk: openjdk8
+      env: TESTENV=tests
+      script: mvn test
+    - name: "GitHub Pages"
+      jdk: openjdk8
+      env: TESTENV=cover FYI="this also builds documentation for tags"
+      script: '[[ -n "$TRAVIS_TAG" ]] && ./deploy-docs.sh || true'
+      addons:
+        apt:
+          packages:
+            - python3
+            - python3-pip
+            - python-virtualenv
+            - make
 
 after_success:
-  - '[[ "$TESTENV" == "cover" ]] && bash <(curl -s https://codecov.io/bash)'
-  - '[[ "$TESTENV" == "cover" ]] && [[ -n "$TRAVIS_TAG" ]] && ./deploy-docs.sh'
+  - '[[ "$TESTENV" == "tests" ]] && bash <(curl -s https://codecov.io/bash) -f engine.io-server-coverage/target/site/jacoco-aggregate/jacoco.xml'
+
+cache:
+  directories:
+  - $HOME/.m2
