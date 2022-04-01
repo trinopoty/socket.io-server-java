@@ -108,10 +108,8 @@ final class PacketUtils {
                 (object == JSONObject.NULL) ||
                 (object instanceof JSONObject) ||
                 (object instanceof JSONArray) ||
-                (object instanceof String) ||
-                (object instanceof Integer) ||
-                (object instanceof Long) ||
-                (object instanceof Double) ||
+                (object instanceof CharSequence) ||
+                (object instanceof Number) ||
                 (object instanceof Boolean) ||
                 (object instanceof byte[]));
     }
