@@ -41,4 +41,4 @@ A basic demo project running on a Jetty server can be found at https://github.co
 
 ## License
 
-MIT
+Apache 2.0
