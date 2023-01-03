@@ -5,7 +5,7 @@
     <parent>
         <artifactId>socket.io-server-bom</artifactId>
         <groupId>io.socket</groupId>
-        <version>4.0.1</version>
+        <version>4.1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,9 +16,14 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20201115</version>
+        </dependency>
+        <dependency>
             <groupId>io.socket</groupId>
             <artifactId>engine.io-server</artifactId>
-            <version>6.1.0</version>
+            <version>6.3.0</version>
         </dependency>
         <dependency>
             <groupId>javax</groupId>
@@ -37,13 +42,13 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>3.12.1</version>
+            <version>4.11.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-inline</artifactId>
-            <version>3.12.1</version>
+            <version>4.11.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
