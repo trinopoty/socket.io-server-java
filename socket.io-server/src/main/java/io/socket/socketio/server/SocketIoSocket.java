@@ -72,6 +72,7 @@ public final class SocketIoSocket extends Emitter {
     private final HashMap<Integer, ReceivedByRemoteAcknowledgementCallback> mAcknowledgementCallbacks = new HashMap<>();
 
     private boolean mConnected;
+    private Object customData;
 
     SocketIoSocket(SocketIoNamespaceImpl namespace, SocketIoClient client, Object connectData) {
         mNamespace = namespace;
@@ -295,6 +296,20 @@ public final class SocketIoSocket extends Emitter {
             mAdapter.remove(room, this);
         }
         mRooms.clear();
+    }
+
+    /**
+     * Set customData object.
+     */
+    public void setCustomData(Object customData) {
+        this.customData = customData;
+    }
+
+	/**
+     * Get customData object.
+     */
+    public Object getCustomData() {
+        return this.customData;
     }
 
     /**
