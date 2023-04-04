@@ -2,9 +2,7 @@ package io.socket.socketio.server;
 
 import io.socket.engineio.server.Emitter;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 final class SocketIoNamespaceGroupImpl extends SocketIoNamespace {
@@ -21,6 +19,13 @@ final class SocketIoNamespaceGroupImpl extends SocketIoNamespace {
     public void broadcast(String[] rooms, String event, Object[] args) throws IllegalArgumentException {
         for (SocketIoNamespaceImpl namespace : mChildNamespaces) {
             namespace.broadcast(rooms, event, args);
+        }
+    }
+
+    @Override
+    public void broadcast(String[] rooms, String event, SocketIoSocket[] socketsExcluded, Object[] args) throws IllegalArgumentException {
+        for (SocketIoNamespaceImpl namespace : mChildNamespaces) {
+            namespace.broadcast(rooms, event, socketsExcluded, args);
         }
     }
 

@@ -71,5 +71,17 @@ public abstract class SocketIoNamespace extends Emitter {
      */
     public abstract void broadcast(String[] rooms, String event, Object[] args) throws IllegalArgumentException;
 
+    /**
+     * Broadcast a message to all clients in this namespace that
+     * have joined specified rooms. Optionally, specify sockets to exclude from sending.
+     *
+     * @param rooms Rooms to send message to.
+     * @param event Name of event to raise on remote client.
+     * @param socketsExcluded List of sockets to exclude from sending or null.
+     * @param args Array of arguments to send. Supported types are: JSONObject, JSONArray, null
+     * @throws IllegalArgumentException If event is null or argument is not of supported type.
+     */
+    public abstract void broadcast(String[] rooms, String event, SocketIoSocket[] socketsExcluded, Object[] args) throws IllegalArgumentException;
+
     abstract Map<String, SocketIoSocket> getConnectedSockets();
 }

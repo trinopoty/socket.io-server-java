@@ -185,6 +185,33 @@ public final class SocketIoSocket extends Emitter {
     }
 
     /**
+     * Broadcast a message to all clients in this namespace that
+     * have joined specified rooms. Optionally, specify sockets to exclude from sending.
+     *
+     * @param rooms Rooms to send message to.
+     * @param event Name of event to raise on remote client.
+     * @param socketsExcluded List of sockets to exclude from sending or null.
+     * @param args Array of arguments to send. Supported types are: JSONObject, JSONArray, null.
+     * @throws IllegalArgumentException If argument is not of supported type or socketsExcluded is null.
+     */
+    public void broadcast(String[] rooms, String event, SocketIoSocket[] socketsExcluded, Object[] args) throws IllegalArgumentException {
+        if (event == null) {
+            throw new IllegalArgumentException("event cannot be null.");
+        }
+
+        final Packet<?> packet = PacketUtils.createDataPacket(Parser.EVENT, event, args);
+
+	    String[] socketsExcludedIds = socketsExcluded == null ? null :
+			    Arrays.stream(socketsExcluded)
+			            .filter(Objects::nonNull)
+			            .map(SocketIoSocket::getId)
+			            .distinct()
+			            .toArray(String[]::new);
+
+	    mAdapter.broadcast(packet, rooms, socketsExcludedIds);
+    }
+
+    /**
      * Send data to remote client.
      *
      * @param event Name of event to raise on remote client.
