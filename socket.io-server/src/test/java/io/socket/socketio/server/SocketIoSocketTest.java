@@ -635,7 +635,7 @@ public final class SocketIoSocketTest {
                 final Object[] args1 = invocation1.getArguments();
                 ((SocketIoSocket.ReceivedByLocalAcknowledgementCallback) args1[1]).sendAcknowledgement();
                 return null;
-            }).when(messageListener).call(Mockito.any());
+            }).when(messageListener).call(Mockito.any(Object[].class));
             socket.on("foo", messageListener);
 
             socket.onEvent(eventPacket);

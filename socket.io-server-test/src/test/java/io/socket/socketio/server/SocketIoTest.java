@@ -54,7 +54,7 @@ public final class SocketIoTest {
         try {
             serverWrapper.startServer();
             assertEquals(0, Utils.executeScriptForResult("src/test/resources/test_message_to_server_nonbinary_noack.js", serverWrapper.getPort()));
-            Mockito.verify(messageListener, Mockito.times(1)).call(Mockito.any());
+            Mockito.verify(messageListener, Mockito.times(1)).call(Mockito.any(Object[].class));
         } finally {
             serverWrapper.stopServer();
         }
@@ -89,7 +89,7 @@ public final class SocketIoTest {
 
             ((SocketIoSocket.ReceivedByLocalAcknowledgementCallback) messageArgs[2]).sendAcknowledgement("baz");
             return null;
-        }).when(messageListener).call(Mockito.any());
+        }).when(messageListener).call(Mockito.any(Object[].class));
 
         serverWrapper.getSocketIoServer().namespace("/").on("connection", args -> {
             final SocketIoSocket socket = (SocketIoSocket) args[0];
@@ -98,7 +98,7 @@ public final class SocketIoTest {
         try {
             serverWrapper.startServer();
             assertEquals(0, Utils.executeScriptForResult("src/test/resources/test_message_to_server_nonbinary_ack.js", serverWrapper.getPort()));
-            Mockito.verify(messageListener, Mockito.times(1)).call(Mockito.any());
+            Mockito.verify(messageListener, Mockito.times(1)).call(Mockito.any(Object[].class));
         } finally {
             serverWrapper.stopServer();
         }
