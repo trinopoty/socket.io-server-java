@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Represents connection to one client.
+ * Be careful if interacting with this class directly, it might leave the connection in an invalid state.
  */
 public final class SocketIoClient {
 
@@ -195,8 +196,10 @@ public final class SocketIoClient {
     private void doConnect(String namespace, Object data) {
         final SocketIoNamespaceImpl nsp = (SocketIoNamespaceImpl)mServer.namespace(namespace);
         final SocketIoSocket socket = nsp.add(this, data);
-        mSockets.put(socket.getId(), socket);
-        mNamespaceSockets.put(namespace, socket);
+        if (socket.isConnected()) {
+            mSockets.put(socket.getId(), socket);
+            mNamespaceSockets.put(namespace, socket);
+        }
     }
 
     private void onClose(String reason) {

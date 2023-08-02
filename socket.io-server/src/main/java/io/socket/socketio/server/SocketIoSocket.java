@@ -106,10 +106,24 @@ public final class SocketIoSocket extends Emitter {
     }
 
     /**
+     * Gets the status of the connection.
+     */
+    public boolean isConnected() {
+        return mConnected;
+    }
+
+    /**
      * Gets the namespace of this socket.
      */
     public SocketIoNamespace getNamespace() {
         return mNamespace;
+    }
+
+    /**
+     * Gets the underlying client.
+     */
+    public SocketIoClient getClient() {
+        return mClient;
     }
 
     /**
