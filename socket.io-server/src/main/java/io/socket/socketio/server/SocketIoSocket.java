@@ -373,12 +373,13 @@ public final class SocketIoSocket extends Emitter {
 
     void onClose(String reason) {
         if (mConnected) {
+            mConnected = false;
+
             emit("disconnecting", reason);
 
             leaveAllRooms();
             mNamespace.remove(this);
             mClient.remove(this);
-            mConnected = false;
             mNamespace.removeConnected(this);
 
             emit("disconnect", reason);
