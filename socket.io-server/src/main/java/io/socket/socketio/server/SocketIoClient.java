@@ -206,9 +206,7 @@ public final class SocketIoClient {
         destroy();
 
         for (SocketIoSocket socket : mSockets.values()) {
-            if (socket.isConnected()) {
-                socket.onClose(reason);
-            }
+            socket.onClose(reason);
         }
         mSockets.clear();
 
