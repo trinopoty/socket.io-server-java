@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Represents connection to one client.
  */
-final class SocketIoClient {
+public final class SocketIoClient {
 
     private final SocketIoServer mServer;
     private final EngineIoSocket mConnection;
@@ -40,21 +40,21 @@ final class SocketIoClient {
     /**
      * Get id of this client.
      */
-    String getId() {
+    public String getId() {
         return mId;
     }
 
     /**
      * Get the query parameters of underlying engine.io connection.
      */
-    Map<String, String> getInitialQuery() {
+    public Map<String, String> getInitialQuery() {
         return mConnection.getInitialQuery();
     }
 
     /**
      * Get the headers of the underlying engine.io connection.
      */
-    Map<String, List<String>> getInitialHeaders() {
+    public Map<String, List<String>> getInitialHeaders() {
         return mConnection.getInitialHeaders();
     }
 
@@ -63,7 +63,7 @@ final class SocketIoClient {
      *
      * @param packet Packet to send.
      */
-    void sendPacket(final Packet<?> packet) {
+    public void sendPacket(final Packet<?> packet) {
         if (mConnection.getReadyState() == ReadyState.OPEN) {
             mEncoder.encode(packet, objects -> {
                 // TODO: Check for volatile flag
@@ -82,7 +82,7 @@ final class SocketIoClient {
      *
      * @param namespace Namespace to connect to.
      */
-    void connect(String namespace, Object data) {
+    public void connect(String namespace, Object data) {
         if (mServer.hasNamespace(namespace) || mServer.checkNamespace(namespace)) {
             doConnect(namespace, data);
         } else {
@@ -105,7 +105,7 @@ final class SocketIoClient {
      *
      * @param socket Socket to remove.
      */
-    void remove(SocketIoSocket socket) {
+    public void remove(SocketIoSocket socket) {
         if (mSockets.containsValue(socket)) {
             final SocketIoNamespace namespace = socket.getNamespace();
             mSockets.remove(socket.getId());
@@ -116,7 +116,7 @@ final class SocketIoClient {
     /**
      * Disconnect from all namespaces and close transport.
      */
-    void disconnect() {
+    public void disconnect() {
         for (SocketIoSocket socket : mSockets.values()) {
             socket.disconnect(false);
         }
@@ -129,7 +129,7 @@ final class SocketIoClient {
      * Get the underlying engine.io connection.
      * @return Engine.IO connection object.
      */
-    EngineIoSocket getConnection() {
+    public EngineIoSocket getConnection() {
         return mConnection;
     }
 
