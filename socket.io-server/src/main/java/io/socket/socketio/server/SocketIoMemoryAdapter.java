@@ -28,7 +28,7 @@ public final class SocketIoMemoryAdapter extends SocketIoAdapter {
     }
 
     @Override
-    public synchronized void broadcast(Packet packet, String[] rooms, String[] socketsExcluded) throws IllegalArgumentException {
+    public synchronized void broadcast(Packet<?> packet, String[] rooms, String[] socketsExcluded) throws IllegalArgumentException {
         if (packet == null) {
             throw new IllegalArgumentException("packet must not be null.");
         }
