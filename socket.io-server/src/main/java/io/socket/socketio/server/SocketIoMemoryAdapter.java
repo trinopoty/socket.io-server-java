@@ -139,4 +139,14 @@ public final class SocketIoMemoryAdapter extends SocketIoAdapter {
             return new String[0];
         }
     }
+
+	@Override
+	public boolean isEmptyRoom(String room) throws IllegalArgumentException {
+		if (room == null) {
+			throw new IllegalArgumentException("room must not be null.");
+		}
+
+		Set<SocketIoSocket> socketsInRoom = mRoomSockets.get(room);
+		return socketsInRoom == null || socketsInRoom.isEmpty();
+	}
 }

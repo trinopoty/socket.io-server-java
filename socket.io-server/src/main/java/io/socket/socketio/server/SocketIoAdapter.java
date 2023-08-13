@@ -105,4 +105,13 @@ public abstract class SocketIoAdapter extends Emitter {
      * @throws IllegalArgumentException If socket is null.
      */
     public abstract String[] listClientRooms(SocketIoSocket socket) throws IllegalArgumentException;
+
+    /**
+     * Check whether room is empty
+     *
+     * @param room Room name to list sockets in.
+     * @return boolean whether room is empty
+     * @throws IllegalArgumentException If room is null.
+     */
+    public abstract boolean isEmptyRoom(String room) throws IllegalArgumentException;
 }
